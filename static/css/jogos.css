@@ -1,0 +1,56 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+.local {
+  display: flex;
+}
+
+.local > h5 {
+  margin-right: 4px !important;
+}
+
+.card__apostas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aposta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.placar {
+  margin: 0 auto;
+}
+
+.placar input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.placar input {
+  outline: none;
+  width: 30px;
+  margin: 0 7px;
+  padding-left: 6px;
+}
+
+.time_nome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.time_nome img {
+  max-width: 100%;
+  width: 50px;
+}
