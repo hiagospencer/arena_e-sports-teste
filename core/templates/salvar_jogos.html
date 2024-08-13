@@ -1,0 +1,38 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Salvar Jogos {% endblock%} {% block body %} {% load crispy_forms_tags %}
+<main id="main" class="main">
+  <section class="section col-xxl-4 col-xl-12">
+    <div class="card col-xxl-12">
+      <div class="card-body">
+        <h3 class="title p-3" id="rodada">
+          Salvar Jogos:
+        </h3>
+        <h2 class="my-4">Inserir Resultado do Jogo</h2>
+        <form method="POST" class="mb-4" action="{% url 'salvar_jogos' %}">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              {{ form.time_casa|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6">
+              {{ form.time_visitante|as_crispy_field }}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              {{ form.placar_casa|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6">
+              {{ form.placar_visitante|as_crispy_field }}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+        
+        <!-- === Fim da sessão de apostas ==== -->
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+{% endblock %}

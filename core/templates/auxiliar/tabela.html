@@ -1,0 +1,40 @@
+{% load static %} {% block body %}
+<table class="w-100">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="3" class="coluna-clube">Clube</th>
+      <th>Pts</th>
+      <th>PJ</th>
+      <th>VIT</th>
+      <th>E</th>
+      <th>DER</th>
+      <th>GP</th>
+      <th>GC</th>
+      <th>SG</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if times %}
+      {% for time in times %}
+      <tr>
+        <td class="borda-azul"></td>
+        <td>{{ time.intRank }}</td>
+
+        <td><img src="{{ time.strBadge }}" alt="Palmeiras" /></td>
+        <td class="titulo-clube">{{ time.strTeam }}</td>
+        <td>{{ time.intPoints }}</td>
+        <td>12</td>
+        <td>{{time.intPlayed}}</td>
+        <td>{{time.intWin}}</td>
+        <td>{{time.intDraw}}</td>
+        <td>{{ time.intGoalsFor }}</td>
+        <td>{{ time.intGoalsAgainst }}</td>
+        <td>{{ time.intGoalDifference }}</td>
+        <td class="coluna-bordas"></td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+{% endblock %}

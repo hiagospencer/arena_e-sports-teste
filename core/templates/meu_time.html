@@ -1,0 +1,85 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Meu Elenco {% endblock%} {% block body %} {% load humanize %}
+<main id="main" class="main">
+
+  <section class="section w-100">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body collapse1">
+            <h5 class="card-title">Meu Elenco</h5>
+            
+            <table class="table table-dark table-striped">
+              <thead>
+                <tr>
+                  <th>
+                    <b>N</b>ame
+                  </th>
+                  <th>Overall</th>
+                  <th>Posição</th>
+                  <th>Time</th>
+                  <th>Salário</th>
+                  <th>Passe</th>
+                  <th>Transferir</th>
+                  <th>Dispensar</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for jogador in jogadores %}
+                <tr>
+                  <td>
+                    <img src="{{ jogador.avatar }}" alt="" width="25" height="28"> {{ jogador.nome }}
+                  </td>
+                  <td>{{ jogador.overall }}</td>
+                  <td>{{ jogador.posicao }}</td>
+                  <td><img src="{{ usuario.emblema_time }}" alt="" width="25" height="25"> {{ jogador.time_usuario.usuario.username}}</td>
+                  <td>{{ jogador.salario|intcomma }}</td>
+                  <td>{{ jogador.preco|intcomma }}</td>
+                  {% if contratacao_ativo %}
+                      <td><a href="{% url 'select_players_for_trade'  %}" class="btn btn-outline-light">
+                        <i class="bi bi-arrow-left-right" style="color: #FFF;"></i>
+                      </a></td>
+                  {% else %}
+                      <td>
+                        <button class="btn btn-outline-light" onclick="contratacaoFechado()"><i class="bi bi-lock-fill"></i></button>
+                      </td>
+                  {% endif %}
+                  <td>
+                    <form method="post" action="{% url 'meu_time' %}"
+                      onsubmit="return dispensar('{{ jogador.nome }}')">
+                      {% csrf_token %}
+                      <input type="hidden" name="player_id" value="{{ jogador.id }}">
+                      <button class="btn btn-outline-light" type="submit"><i class="bi bi-trash"></i></button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main><!-- End #main -->
+<!-- End #main -->
+
+{% block scripts %}
+<script>
+
+  const contratacaoFechado = () => {
+    alert("Periodo de contratação fechado!")
+  }
+
+  function dispensar(playerName) {
+    var mensagem = `Você pretende dispensar ${playerName} ?`;
+    return confirm(mensagem);
+  }
+
+</script>
+{% endblock %}
+{% endblock %}

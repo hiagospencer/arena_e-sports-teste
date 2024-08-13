@@ -1,0 +1,133 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports {% endblock%} {% block body %} {% load l10n %} {% load humanize %}
+<main id="main" class="main">
+  <section class="section dashboard">
+    <div class="row">
+      <!-- Customers Card -->
+      <div class="col-xxl-4 col-xl-12">
+        <div class="card info-card customers-card">
+          <div class="card-body">
+            <h5 class="card-title">Usuário</h5>
+
+            {% if not verificado %}
+            {% for usuario in dados %}
+            <div class="d-flex align-items-center ">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <img src="{% static 'img/perfil-null.png' %}" alt="" width="90" style="border-radius: 50%" />
+              </div>
+              <div class="ps-3 m-4">
+                <h6>{{ usuario.usuario }}</h6>
+                <span class="text-success small pt-1 fw-bold">WhatsApp:</span>
+                <span class="text-muted small pt-2 ps-1">{{ usuario.whatsapp }}</span><br />
+                <h4>Complete seus dados na aba Perfil.</h4>
+              </div>
+            </div>
+            {% endfor %}
+
+            {% else %}
+
+            {% for usuario in dados %}
+            <div class="d-flex align-items-center m-lg-2">
+              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <img src="{{ usuario.imagem.url }}" alt="" width="90" style="border-radius: 50%" />
+              </div>
+              <div class="ps-3 m-4">
+                <h6>{{ usuario.nome }} {{ usuario.sobrenome }}</h6>
+                <span class="text-success small pt-1 fw-bold">WhatsApp:</span>
+                <span class="text-muted small pt-2 ps-1 mt-1">{{ usuario.whatsapp }}</span>
+                <div class=" d-flex align-items-rigth justify-content-rigth mt-2">
+                  <span class=" small pt-1 fw-bold ">Time Favorito:</span><img src="{{ usuario.emblema_time }}" alt=""
+                    width="30" height="30" />
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!-- End Customers Card -->
+
+      <!-- Left side columns -->
+      <div class="col-lg-8">
+        <div class="row">
+          <!-- Sales Card
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+                <div class="card-body">
+                  <h5 class="card-title">Sales <span>| Today</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6>145</h6>
+                      <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>End Sales Card -->
+
+          <!-- Revenue Card -->
+          <div class="col-xxl-6 col-md-12">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  Orçamento <span>| Temporada Atual</span>
+                </h5>
+                {% for usuario in orcamento %}
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-currency-dollar"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6>R$ {{ usuario.dinheiro_time|intcomma }}</h6>
+                    <span class="pt-1" style="display: block"><b>Salário:</b> R$ {{ usuario.salario_time|intcomma }}</span>
+                    <span class="pt-1" style="display: block"><b>Saldo:</b> R$ {{ usuario.saldo|intcomma}}</span>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <!-- End Revenue Card -->
+        </div>
+      </div>
+
+
+
+     <div class="col-lg-4">
+        <div class="card d-flex align-items-center ">
+          <div class="card-body pb-2 justify-content-center">
+            <h5 class="card-title">Elenco</h5>
+            {% for jogador in jogadores %}
+            <div class="">
+              <div class="d-flex align-items-center">
+                <img src="{{ jogador.avatar }}" alt="" width="40" height="40">
+                <span>{{ jogador.nome }}</span>
+                <span style="margin-left: 10px !important;">({{ jogador.posicao }})</span>
+              </div>
+              <hr>
+              {% endfor %}
+
+          </div>
+        </div>
+          <span>Minímo jogadores no elenco: 14</span>
+
+          {% if quantidade_jogadores %}
+            <p>Jogadores no seu elenco: <b>{{ quantidade_jogadores }}</b></p>
+          {% else %}
+            <p>Jogadores no elenco: <b>0</b></p>
+          {% endif %}
+
+      </div>
+    </div>
+
+  </section>
+
+</main>
+<!-- End #main -->
+{% endblock %}

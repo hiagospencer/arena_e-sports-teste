@@ -1,0 +1,30 @@
+ <!-- ====================== Section pagination ============ -->
+
+ <section class="mb-5">
+    <ul class="pagination justify-content-center">
+        {% if posts.has_previous %}
+        <a href="?page=1" class="page-item">
+            <li class="page-link">Primeira</li>
+        </a>
+        <a href="?page={{ posts.previous_page_number }}" class="page-item">
+            <li class="page-link">{{ posts.previous_page_number }}</li>
+        </a>
+        {% endif %}
+
+        <a href=""  class="active page-item">
+            <li class="page-link">{{ posts.number }}</li>
+        </a>
+
+        {% if posts.has_next %}
+
+        <a class="page-item" href="?page={{ posts.next_page_number}}">
+            <li class="page-link">Próximo</li>
+        </a>
+        <a href="?page={{ posts.paginator.num_pages}}" class="page-item">
+            <li class="page-link">Ultima &raquo;</li>
+        </a>
+        {% endif %}
+    </ul>
+  </section>
+
+  <!-- ====================== Fim do pagination ============ -->

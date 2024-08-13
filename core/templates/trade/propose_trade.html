@@ -1,0 +1,29 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Proposta {% endblock%} {% block body %} {% load l10n %} {% load humanize %}
+
+<main id="main" class="main">
+
+    <section class="section w-100">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body collapse1">
+                        <h5 class="card-title">Propor Troca</h5>
+                        <p>Você está propondo trocar <b><i>{{ proposer_player.nome }}</i></b> por   <b><i>{{receiver_player.nome }}</i></b>.</p>
+                        <form method="POST" class="d-flex ">
+                            {% csrf_token %}
+                            <label for="money_offered" class="form-label align-content-center">Dinheiro oferecido:</label>
+                            <input type="number" class=" form-control w-25 m-lg-2"
+                            name="money_offered" step="0.01" min="0" required>
+                            <button type="submit" class="btn btn-primary">Propor Troca</button>
+                        </form>
+                        <a href="{% url 'trade_list' %}" class="btn btn-light mt-2">Voltar para a lista de trocas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+{% endblock %}

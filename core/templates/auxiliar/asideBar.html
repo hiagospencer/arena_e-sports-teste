@@ -1,0 +1,103 @@
+<aside id="sidebar" class="sidebar">
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item">
+      <a class="nav-link " href="{% url 'homepage'%}">
+        <i class="bi bi-grid"></i>
+        <span>Início</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Liga</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'classificacao'%}">
+            <i class="bi bi-circle"></i><span>Classificação</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Forms Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-layout-text-window-reverse"></i><span>Jogos</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'salvar_jogos'%}">
+            <i class="bi bi-circle"></i><span>Salvar jogo</span>
+          </a>
+        </li>
+        {% if user.is_superuser %}
+        <li>
+          <a href="{% url 'gerar_jogos'%}">
+            <i class="bi bi-circle"></i><span>Gerar jogos</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'criar_jogadores'%}">
+            <i class="bi bi-circle"></i><span>Criar jogadores</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'criar_emblemas_times'%}">
+            <i class="bi bi-circle"></i><span>Criar os emblemas</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'zerar_pontos_classificacao'%}">
+            <i class="bi bi-circle"></i><span>Resetar Classificação</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </li><!-- End Tables Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-menu-button-wide"></i><span>Negociações</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'leiloes'%}">
+            <i class="bi bi-circle"></i><span>Leilões</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'contratar_jogador'%}">
+            <i class="bi bi-circle"></i><span>Contratar Jogador</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'trade_list'%}">
+            <i class="bi bi-circle"></i><span>Lista de transferência</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'meu_time'%}">
+            <i class="bi bi-circle"></i><span>Meu Time</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Forms Nav -->
+
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'perfil'%}">
+        <i class="bi bi-person"></i>
+        <span>Perfil</span>
+      </a>
+    </li><!-- End Profile Page Nav -->
+
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="{% url 'logout'%}">
+        <i class="bi bi-box-arrow-in-right"></i>
+        <span>Sair</span>
+      </a>
+    </li><!-- End Login Page Nav -->
+    {% endif %}
+  </ul>
+</aside><!-- End Sidebar-->

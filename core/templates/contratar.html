@@ -1,0 +1,104 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Contarar Jogador {% endblock%} {% block body %} {% load humanize %}
+<main id="main" class="main">
+
+  <section class="section w-100">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body collapse1">
+            <h5 class="card-title">Contratar Jogador</h5>
+            <p>
+              Quando o periodo de contratações está aberto, qualquer jogador livre no mercado pode ser contratado.
+            </p>
+            <form action="?" method="GET">
+              <div class="row g-3 align-items-center ">
+                <div class="col-auto">
+                  <input type="search" id="pesquisar" name="pesquisar" class="form-control" placeholder="Pesquisar...">
+                </div>
+                <div class="col-auto">
+                  <a href="{% url 'contratar_jogador' %}" class="btn btn-outline-info">
+                    Limpar
+                  </a>
+                </div>
+              </div>
+            </form>
+            {% if messages %}
+
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">
+              <span{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</span>
+            </div>
+            {% endfor %}
+
+            {% endif %}
+            <table class="table table-dark table-striped mt-2">
+              <thead>
+                <tr>
+                  <th>
+                    <b>N</b>ame
+                  </th>
+                  <th>Overall</th>
+                  <th>Posição</th>
+                  <th>Salário</th>
+                  <th>Passe</th>
+                  <th>Comprar</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for jogador in posts %}
+                <tr>
+                  <td>
+                    <img src="{{ jogador.avatar }}" alt="" width="25" height="28"> {{ jogador.nome }}
+                  </td>
+                  <td>{{ jogador.overall }}</td>
+                  <td>{{ jogador.posicao }}</td>
+                  <td>{{ jogador.salario|intcomma }}</td>
+                  <td>{{ jogador.preco|intcomma }}</td>
+
+
+                  {% if contratacao_ativo %}
+                          <td>
+                            <form method="post" action="{% url 'contratar_jogador_time' jogador.id %}"
+                              onsubmit="return confirmarEnvio('{{ jogador.id }}', '{{ jogador.nome }}', '{{ jogador.preco }}')">
+                              {% csrf_token %}
+                              <button class="btn btn-outline-light" type="submit"><i class="bi bi-bag"></i></button>
+                            </form>
+                          </td>
+
+                    {% else %}
+                          <td>
+                            <button class="btn btn-outline-light" onclick="contratacaoFechado()"><i class="bi bi-lock-fill"></i></button>
+                          </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+            {% include 'auxiliar/pagination.html' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main><!-- End #main -->
+<!-- End #main -->
+
+{% block scripts %}
+<script>
+
+  const contratacaoFechado = () => {
+    alert("Periodo de contratações fechado!")
+  }
+
+  function confirmarEnvio(playerId, playerName, playerPrice) {
+    var mensagem = `Você pretende contratar ${playerName} por ${playerPrice} ?`;
+    return confirm(mensagem);
+  }
+
+</script>
+{% endblock %}
+{% endblock %}

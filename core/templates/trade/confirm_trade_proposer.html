@@ -1,0 +1,26 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Confirmar troca {% endblock%} {% block body %} {% load l10n %} {% load humanize %}
+
+<main id="main" class="main">
+
+    <section class="section w-100">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body collapse1">
+                        <h5 class="card-title">Confirmar à Troca</h5>
+                        <p>Você está prestes a confirmar a troca de <b><i>{{ trade.proposer_player.nome }}</i></b> por <b><i>{{ trade.receiver_player.nome }}</i></b> e <b>{{ trade.money_offered }}</b> em dinheiro.</p>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Confirmar Troca</button>
+                        </form>
+                        <a href="{% url 'trade_list' %}" class="btn btn-light mt-2">Voltar para a lista de trocas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+{% endblock %}

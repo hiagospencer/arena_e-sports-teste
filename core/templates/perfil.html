@@ -1,0 +1,143 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Perfil {% endblock%} {% block body %}
+<main id="main" class="main">
+  <section class="section profile col-xl-10">
+    <div class="row">
+      <div class="col-xl-4">
+        {% for usuario in dados %}
+        <div class="card">
+          <form method="POST" action="{% url 'perfil' %}" enctype='multipart/form-data'>
+           {% csrf_token %}
+           {% if not verificado %}
+          <div
+            class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+            <img
+              src="{% static 'img/perfil-null.png' %}"
+              alt="{{ usuario.nome}}"
+              class="rounded-circle" />
+              <div class="input-group mt-2">
+                <input type="file" class="form-control" name="img" id="inputGroupFile02">
+                <label class="input-group-text" for="inputGroupFile02">Imagem</label>
+              </div>
+          </div>
+          {% else %}
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+              <img src="{{ usuario.imagem.url}}" alt="{{ usuario.nome}}" class="rounded-circle" />
+              <div class="input-group mt-2">
+                <input type="file" class="form-control" name="img" id="inputGroupFile02">
+                <label class="input-group-text" for="inputGroupFile02">Imagem</label>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-xl-8">
+        <div class="card">
+          <div class="card-body pt-3">
+            <!-- Bordered Tabs -->
+            <ul class="nav nav-tabs nav-tabs-bordered">
+              <li class="nav-item">
+                <button
+                  class="nav-link active"
+                  data-bs-toggle="tab"
+                  data-bs-target="#profile-overview">
+                  Sobre
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content pt-2">
+              <div
+                class="tab-pane fade show active profile-overview"
+                id="profile-overview">
+                <h5 class="card-title">Perfil</h5>
+                <h5 class="card-title">Detalhes Perfil</h5>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Nome</div>
+                    <div class="col-lg-9 col-md-8">
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="nome"
+                        id="nome"
+                        value="{{ usuario.nome }}" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Sobrenome</div>
+                    <div class="col-lg-9 col-md-8">
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="sobrenome"
+                        id="nome"
+                        value="{{ usuario.sobrenome }}" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Usuário</div>
+                    <div class="col-lg-9 col-md-8">
+                      <div
+                        class="form-control"
+                        type="text"
+                        name="usuario"
+                        id="nome"
+                        style="cursor: not-allowed;">{{ usuario.usuario }}</div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Email</div>
+                    <div class="col-lg-9 col-md-8">
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="email"
+                        id="nome"
+                        value="{{ usuario.email }}" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Whatsapp</div>
+                    <div class="col-lg-9 col-md-8">
+                      <input
+                        class="form-control"
+                        type="text"
+                        name="whatsapp"
+                        id="nome"
+                        value="{{ usuario.whatsapp }}" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Time Favorito</div>
+                    <div class="col-lg-9 col-md-8">
+                      <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example" name="time">
+                        <option selected>Selecione o time</option>
+                        {% for time in times %}
+                        <option value="{{ time.emblema }}" >{{ time.time }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <button class="btn btn-primary" type="submit">
+                      Salvar
+                    </button>
+                  </div>
+                </form>
+              </div>
+              {% endfor %}
+            </div>
+            <!-- End Bordered Tabs -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+{% endblock %}

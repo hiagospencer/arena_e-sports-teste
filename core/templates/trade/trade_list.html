@@ -1,0 +1,76 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Lista de Transferência {% endblock%} {% block body %} {% load l10n %} {% load humanize %}
+<main id="main" class="main">
+
+    <section class="section w-100">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body collapse1">
+                        <h2 class="card-title">Lista de Tranferência</h2>
+                        <p>Verifique suas propostas feitas e recebidas.
+                            Para efetuar uma transferência entres jogadores, verifique se a janela de trasnferência está aberta na aba do "Meu time".
+                        </p>
+                        <h3>Propostas Feitas</h3>
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-info mt-2" role="alert">
+                                <span {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</span>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if proposals_made %}
+                        <ul class="list-group">
+                            {% for proposal in proposals_made %}
+                            <li class="list-group-item list-group-item-light">
+                                Você propôs trocar <b><i>{{ proposal.proposer_player.nome }}</i></b> por
+                                <b><i>{{ proposal.receiver_player.nome }}</i></b> de <b>{{ proposal.receiver.username }}</b>
+                                 com uma oferta de <b>R$ {{ proposal.money_offered|intcomma }}</b>.
+                                {% if proposal.status == 'pending' %}
+                                <strong>Status:</strong> Aguardando resposta.
+                                <a href="{% url 'confirm_trade_proposer' proposal.id %}"
+                                 class="btn btn-success btn-sm" style="color: #FFF !important;">Confirmar</a>
+                                {% elif proposal.status == 'accepted' %}
+                                <strong>Status:</strong> <i class="text-success green-700"> Aceito</i>
+                                {% elif proposal.status == 'rejected' %}
+                                <strong>Status:</strong> <i class="text-warning red-500"> Rejeitado</i>
+                                {% endif %}
+                            </li class="list-group-item list-group-item-light">
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>Você não fez nenhuma proposta de troca.</p>
+                        {% endif %}
+
+                        <h3>Propostas Recebidas</h2>
+                        {% if proposals_received %}
+                        <ul class="list-group">
+                            {% for proposal in proposals_received %}
+                            <li class="list-group-item list-group-item-light">
+                                <b>{{ proposal.proposer.usuario }}</b> propôs trocar <b><i>{{ proposal.proposer_player.nome }}</i></b> por <b><i>{{ proposal.receiver_player.nome }}</i></b> do seu time, oferecendo <b>R$ {{ proposal.money_offered|intcomma }}</b>.
+                                {% if proposal.status == 'pending' %}
+                                <strong>Status:</strong> Aguardando sua resposta
+                                <a href="{% url 'respond_trade' proposal.id %}" class="btn btn-success btn-sm" style="color: #FFF !important;">Responder</a>
+                                {% elif proposal.status == 'accepted' %}
+                                <strong>Status:</strong> <i class="text-success green-700">Aceito</i>
+                                {% elif proposal.status == 'rejected' %}
+                                <strong>Status:</strong> <i class="text-warning red-500">Rejeitado</i>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>Você não recebeu nenhuma proposta de troca.</p>
+                        {% endif %}
+
+                        <a href="{% url 'meu_time' %}" class="btn btn-light mt-2">Voltar para Meu Time</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+
+{% endblock %}
