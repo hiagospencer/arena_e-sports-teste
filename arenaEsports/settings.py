@@ -19,7 +19,7 @@ MESSAGE_TAGS = {
 SECRET_KEY = 'django-insecure--kjmet38)8%x003pa7z6+z)m=4@2tnl)j!j-y8#nkm7h48wq29'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -84,12 +84,8 @@ WSGI_APPLICATION = 'arenaEsports.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'arena_esports',
-        'USER': 'admin',
-        'PASSWORD': 'avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL',
-        'HOST': 'dpg-cqtqh75ds78s73dmml70-a.oregon-postgres.render.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
