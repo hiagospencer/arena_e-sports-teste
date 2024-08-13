@@ -19,9 +19,9 @@ MESSAGE_TAGS = {
 SECRET_KEY = 'django-insecure--kjmet38)8%x003pa7z6+z)m=4@2tnl)j!j-y8#nkm7h48wq29'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -54,7 +54,6 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'arenaEsports.urls'
 
@@ -82,7 +81,7 @@ WSGI_APPLICATION = 'arenaEsports.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'arena_esports',
         'USER': 'admin',
         'PASSWORD': 'avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL',
@@ -90,6 +89,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# python manage.py migrate && python manage.py collectstatic --noinput && gunicorn arenaEsports.wsgi:application
 
 # postgresql://admin:avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL@/arena_esports
 
@@ -148,3 +149,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CSRF_TRUSTED_ORIGINS = ['https://0447-177-137-18-246.ngrok-free.app/']
 # SESSION_COOKIE_SECURE = False
 # CSRF_COOKIE_SECURE = False
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True

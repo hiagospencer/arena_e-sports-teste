@@ -53,7 +53,6 @@ def homepage(request):
 
 
 @login_required(login_url="login/")
-@csrf_exempt
 def classificacao(request):
     posicao_usuario = Classificacao.objects.all().order_by('-pontos', '-saldo_gols', '-vitoria')
     return render(request, 'classificacao.html', {'classificacao': posicao_usuario})
@@ -97,7 +96,6 @@ def zerar_pontos_classificacao(request):
 
 
 @login_required(login_url="login/")
-@csrf_exempt
 def salvar_jogos(request):
     formClear = JogoForm()
     rodadas = Partida.objects.filter(finalizado=False)
@@ -123,7 +121,6 @@ def salvar_jogos(request):
 
 
 @login_required(login_url="login/")
-@csrf_exempt
 def leiloes(request):
     nome_pesquisa = request.GET.get('pesquisar')
     if nome_pesquisa:
@@ -159,7 +156,6 @@ def leiloes(request):
 
 
 @login_required(login_url="login/")
-@csrf_exempt
 def comprar_jogador(request, player_id):
     usuario = Usuario.objects.get(usuario=request.user)
     jogador = get_object_or_404(DadosEafc, id=player_id)
@@ -212,7 +208,8 @@ def comprar_jogador(request, player_id):
     orcamento_time.save()
     return redirect("leiloes")
 
-@csrf_exempt
+
+@login_required(login_url="login/")
 def contratar_jogador(request):
     leilao,criado = LeilaoAtivo.objects.get_or_create()
     nome_pesquisa = request.GET.get('pesquisar')
@@ -239,7 +236,7 @@ def contratar_jogador(request):
     return render(request, 'contratar.html', context)
 
 
-@csrf_exempt
+@login_required(login_url="login/")
 def contratar_jogador_time(request, id_jogador):
     jogador = get_object_or_404(DadosEafc, id=id_jogador)
     team, created = Team.objects.get_or_create(usuario=request.user)
@@ -267,7 +264,7 @@ def contratar_jogador_time(request, id_jogador):
     return redirect('meu_time')
 
 
-@login_required
+@login_required(login_url="login/")
 def trade_list(request):
     # Obter todas as propostas de troca feitas ou recebidas pelo usuário
     proposals_made = TradeProposal.objects.filter(proposer=request.user).order_by('-created_at')
@@ -278,7 +275,7 @@ def trade_list(request):
         'proposals_received': proposals_received,
     })
 
-@login_required
+@login_required(login_url="login/")
 def select_players_for_trade(request):
     # Obtém o time do usuário logado
     user_team = get_object_or_404(Team, usuario=request.user)
@@ -302,7 +299,7 @@ def select_players_for_trade(request):
     })
 
 
-@login_required
+@login_required(login_url="login/")
 def propose_trade(request, proposer_player_id, receiver_player_id):
     proposer_player = get_object_or_404(DadosEafc, id=proposer_player_id)
     receiver_player = get_object_or_404(DadosEafc, id=receiver_player_id)
@@ -334,7 +331,7 @@ def propose_trade(request, proposer_player_id, receiver_player_id):
     return render(request, 'trade/propose_trade.html',context)
 
 
-@login_required
+@login_required(login_url="login/")
 def confirm_trade_proposer(request, trade_id):
     trade = get_object_or_404(TradeProposal, id=trade_id, proposer=request.user)
 
@@ -347,7 +344,7 @@ def confirm_trade_proposer(request, trade_id):
     return render(request, 'trade/confirm_trade_proposer.html', {'trade': trade})
 
 
-@login_required
+@login_required(login_url="login/")
 def respond_trade(request, trade_id):
     trade = get_object_or_404(TradeProposal, id=trade_id, receiver=request.user)
     print(trade)
@@ -425,7 +422,6 @@ def meu_time(request):
 
 
 @login_required(login_url="login/")
-@csrf_exempt
 def perfil(request):
     user = request.user
     usuario = Usuario.objects.filter(usuario=user)
@@ -468,7 +464,7 @@ def perfil(request):
     context = {"dados":usuario, "verificado":verificado}
     return render(request, 'perfil.html',context)
 
-@csrf_exempt
+
 def fazer_login(request):
     error = False
     if request.user.is_authenticated:
