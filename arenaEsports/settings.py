@@ -19,7 +19,7 @@ MESSAGE_TAGS = {
 SECRET_KEY = 'django-insecure--kjmet38)8%x003pa7z6+z)m=4@2tnl)j!j-y8#nkm7h48wq29'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -85,17 +85,17 @@ WSGI_APPLICATION = 'arenaEsports.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'arena_eSports',
-        'USER': 'postgres',
-        'PASSWORD': 'emillylinda10',
-        'HOST': 'localhost',
+        'NAME': 'arena_esports',
+        'USER': 'admin',
+        'PASSWORD': 'avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL',
+        'HOST': 'dpg-cqtqh75ds78s73dmml70-a.oregon-postgres.render.com',
     },
 }
 
 
 # python manage.py migrate && python manage.py collectstatic --noinput && gunicorn arenaEsports.wsgi:application
 
-# postgresql://admin:avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL@/arena_esports postgresql://admin:avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL@
+# postgresql://admin:avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL@dpg-cqtqh75ds78s73dmml70-a.oregon-postgres.render.com/arena_esports
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -150,7 +150,7 @@ MEDIA_URL = "imagens/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CSRF_TRUSTED_ORIGINS = ['https://0447-177-137-18-246.ngrok-free.app/']
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
