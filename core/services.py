@@ -7,6 +7,10 @@ import pandas as pd
 from .api_times import get_api_eafc
 import os
 from pathlib import Path
+from django.db import IntegrityError
+
+
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -100,18 +104,45 @@ def notificacao(titulo, mensagem):
 
 	notificar.send(block=False)
 
+def truncate_string(value, max_length):
+    return value[:max_length] if isinstance(value, str) else value
 
 def dados_fifa():
+    nomes = []
+    overall = []
+    posicoes = []
+    imagens = []
     dataFrame = pd.read_excel(os.path.join(BASE_DIR, 'arquivos/jogadores.xlsx'))
     # print(dataFrame)
-    for _, row in dataFrame.iterrows():
+    for index, row in dataFrame.iterrows():
+
         jogadores  = DadosEafc.objects.create(
-            nome=row['Nomes'],
-            overall=row['Overall'],
-            posicao=row['Posicao'],
-            avatar=row['Imagem'],
-                )
+            nome=truncate_string(row['Nomes'], 200),
+            overall=truncate_string(row['Overall'], 200),
+            posicao=truncate_string(row['Posicao'], 200),
+            avatar=truncate_string(row['Imagem'], 200),
+            )
         jogadores.save()
+        # overall.append(row['Overall'])
+        # posicoes.append(row['Posicao'])
+        # imagens.append(row['Imagem'])
+
+    # jogadores_dict = {
+    #     "nomes":nomes,
+    #     "overall":overall,
+    #     "posicao": posicoes,
+    #     "imagem":imagens
+    # }
+
+    # jogadores  = DadosEafc.objects.create(
+    #     nome=jogadores_dict['nomes'],
+    #     overall=jogadores_dict['overall'],
+    #     posicao=jogadores_dict['posicao'],
+    #     avatar=jogadores_dict['imagem'],
+    #             )
+    # jogadores.save()
+
+
 
 def resetar_campeonato():
     usuarios = Classificacao.objects.all()

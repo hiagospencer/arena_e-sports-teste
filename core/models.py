@@ -68,7 +68,7 @@ class Team(models.Model):
 class DadosEafc(models.Model):
     nome = models.CharField(max_length=200, null=True, blank=True)
     overall = models.CharField(max_length=200, null=True, blank=True)
-    avatar = models.ImageField(upload_to='thumbnail')
+    avatar = models.CharField(max_length=200, null=True, blank=True)
     posicao = models.CharField(max_length=200, null=True, blank=True)
     preco = models.DecimalField(default=4000, max_digits=100, decimal_places=2)
     salario = models.DecimalField(default=2000, max_digits=100, decimal_places=2)

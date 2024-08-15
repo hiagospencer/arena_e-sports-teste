@@ -84,14 +84,18 @@ WSGI_APPLICATION = 'arenaEsports.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'arena_eSports',
+        'USER': 'postgres',
+        'PASSWORD': 'emillylinda10',
+        'HOST': 'localhost',
+    },
 }
+
 
 # python manage.py migrate && python manage.py collectstatic --noinput && gunicorn arenaEsports.wsgi:application
 
-# postgresql://admin:avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL@/arena_esports
+# postgresql://admin:avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL@/arena_esports postgresql://admin:avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL@
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -146,10 +150,7 @@ MEDIA_URL = "imagens/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CSRF_TRUSTED_ORIGINS = ['https://0447-177-137-18-246.ngrok-free.app/']
-# SESSION_COOKIE_SECURE = False
-# CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
