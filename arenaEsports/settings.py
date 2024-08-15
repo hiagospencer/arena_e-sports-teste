@@ -19,7 +19,7 @@ MESSAGE_TAGS = {
 SECRET_KEY = 'django-insecure--kjmet38)8%x003pa7z6+z)m=4@2tnl)j!j-y8#nkm7h48wq29'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -150,7 +150,9 @@ MEDIA_URL = "imagens/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CSRF_TRUSTED_ORIGINS = ['https://0447-177-137-18-246.ngrok-free.app/']
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
