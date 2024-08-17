@@ -55,7 +55,6 @@ def homepage(request):
 @login_required(login_url="login/")
 def classificacao(request):
     posicao_usuario = Classificacao.objects.all().order_by('-pontos', '-saldo_gols', '-vitoria')
-    reset_jogador()
     return render(request, 'classificacao.html', {'classificacao': posicao_usuario})
 
 
