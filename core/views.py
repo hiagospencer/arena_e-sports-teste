@@ -204,7 +204,7 @@ def comprar_jogador(request, player_id):
     salario_total_elenco = sum(jogador.salario for jogador in jogadores)
 
     # orcamento_time.dinheiro_time -= preco_total_elenco
-    # orcamento_time.salario_time = salario_total_elenco
+    orcamento_time.salario_time = salario_total_elenco
     orcamento_time.saldo = orcamento_time.dinheiro_time - orcamento_time.salario_time
     orcamento_time.save()
     return redirect("leiloes")
