@@ -186,11 +186,10 @@ def comprar_jogador(request, player_id):
 
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
         perfil_comprador.dinheiro_time -= jogador.preco
-        perfil_comprador.salario_time -= jogador.salario
+        perfil_comprador.salario_time += jogador.salario
         # perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
         perfil_comprador.save()
         jogador.time_usuario = team
-
         jogador.save()
         team.save()
 
@@ -200,11 +199,12 @@ def comprar_jogador(request, player_id):
             notificacao('Arena eSports', mensagem)
     messages.success(request, f'Você comprou {jogador.nome} por ${jogador.preco:.2f}')
     request.session['nome_jogador'] = jogador.nome
-    preco_total_elenco = sum(jogador.preco for jogador in jogadores)
-    salario_total_elenco = sum(jogador.salario for jogador in jogadores)
 
-    orcamento_time.dinheiro_time -= preco_total_elenco
-    orcamento_time.salario_time = salario_total_elenco
+    # preco_total_elenco = sum(jogador.preco for jogador in jogadores)
+    # salario_total_elenco = sum(jogador.salario for jogador in jogadores)
+
+    # orcamento_time.dinheiro_time -= preco_total_elenco
+    # orcamento_time.salario_time = salario_total_elenco
     orcamento_time.saldo = orcamento_time.dinheiro_time - orcamento_time.salario_time
     orcamento_time.save()
     return redirect("leiloes")
