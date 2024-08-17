@@ -90,6 +90,7 @@ def criar_emblemas_times(request):
 @user_passes_test(lambda u: u.is_superuser)
 def zerar_pontos_classificacao(request):
     # Essa views só é acessada pelo o superuser
+    # reset_jogador()
     resetar_campeonato()
     return render(request, 'zerar_pontos_classificacao.html')
 
@@ -135,7 +136,7 @@ def leiloes(request):
         return render(request,'leiloes.html',context)
     else:
         nome_jogador = request.session.get('nome_jogador')
-        jogadores = DadosEafc.objects.all()
+        jogadores = DadosEafc.objects.all().order_by('-preco', '-overall')
         leilao,criado = LeilaoAtivo.objects.get_or_create()
         team = Team.objects.get(usuario=request.user)
         #paginator
@@ -175,21 +176,21 @@ def comprar_jogador(request, player_id):
             perfil_proprietario_anterior = OrcamentoTime.objects.get(usuario=dono_anterior)
             perfil_proprietario_anterior.dinheiro_time += jogador.preco
             perfil_proprietario_anterior.salario_time -= jogador.salario
-            perfil_proprietario_anterior.saldo = (perfil_proprietario_anterior.dinheiro_time - perfil_proprietario_anterior.salario_time)
+            # perfil_proprietario_anterior.saldo = (perfil_proprietario_anterior.dinheiro_time - perfil_proprietario_anterior.salario_time)
+            perfil_proprietario_anterior.save()
 
             if perfil_proprietario_anterior.salario_time < 0:
                 perfil_proprietario_anterior.salario_time = 0
                 perfil_proprietario_anterior.save()
-            perfil_proprietario_anterior.save()
+
 
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
         perfil_comprador.dinheiro_time -= jogador.preco
         perfil_comprador.salario_time -= jogador.salario
-        perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
+        # perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
         perfil_comprador.save()
         jogador.time_usuario = team
-        # jogador.preco *= decimal.Decimal(1.10)  # Aumenta o preço em 10%
-        # jogador.salario *= decimal.Decimal(1.05)  # Aumenta o salario em 5%
+
         jogador.save()
         team.save()
 

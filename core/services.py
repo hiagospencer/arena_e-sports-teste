@@ -91,7 +91,13 @@ def atualizar_classificacao(jogo):
     orcamento_casa.save()
     orcamento_visitante.save()
 
-
+def reset_jogador():
+    jogadores = DadosEafc.objects.all()
+    for jogador in jogadores:
+        jogador.preco = 4000
+        jogador.salario = 2000
+        jogador.time_usuario = None
+        jogador.save()
 
 def notificacao(titulo, mensagem):
 	notificar = notifypy.Notify(enable_logging=True)
