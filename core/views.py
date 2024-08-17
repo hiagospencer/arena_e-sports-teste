@@ -201,7 +201,7 @@ def comprar_jogador(request, player_id):
     request.session['nome_jogador'] = jogador.nome
 
     # preco_total_elenco = sum(jogador.preco for jogador in jogadores)
-    # salario_total_elenco = sum(jogador.salario for jogador in jogadores)
+    salario_total_elenco = sum(jogador.salario for jogador in jogadores)
 
     # orcamento_time.dinheiro_time -= preco_total_elenco
     # orcamento_time.salario_time = salario_total_elenco
