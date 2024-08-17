@@ -55,6 +55,7 @@ def homepage(request):
 @login_required(login_url="login/")
 def classificacao(request):
     posicao_usuario = Classificacao.objects.all().order_by('-pontos', '-saldo_gols', '-vitoria')
+
     return render(request, 'classificacao.html', {'classificacao': posicao_usuario})
 
 
@@ -186,7 +187,7 @@ def comprar_jogador(request, player_id):
 
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
 
-        if perfil_comprador < 50000:
+        if perfil_comprador.dinheiro_time < 50000:
             messages.error(request, 'Você não tem saldo suficiente para compra')
             return redirect('leiloes')
 
