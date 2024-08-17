@@ -99,7 +99,9 @@ class TimesEmblemas(models.Model):
 class Verificacao(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_verificado = models.BooleanField(default=False)
+    notificacao_true = models.BooleanField(default=False)
 
+    
     def __str__(self):
         return f"{self.is_verificado}"
 

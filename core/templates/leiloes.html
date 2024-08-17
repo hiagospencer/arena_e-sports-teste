@@ -27,12 +27,14 @@ eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
             {% if messages %}
 
               {% for message in messages %}
-              <div class="alert alert-success" role="alert">
+              <div class="alert alert-success mt-2" role="alert">
                 <span{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</span>
               </div>
                 {% endfor %}
 
             {% endif %}
+
+
             <!-- Table with stripped rows -->
             <table class="table table-dark table-striped mt-2">
               <thead>
@@ -101,6 +103,9 @@ eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
 {% block scripts %}
 <script>
 
+  const notificacao_roubo = (mensagem) => {
+    alert(mensagem)
+  }
   const leilaoFechado = () => {
     alert("Periodo de leilão fechado!")
   }

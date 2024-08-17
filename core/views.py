@@ -149,10 +149,10 @@ def leiloes(request):
             meu_jogador.preco *= decimal.Decimal(1.10)  # Aumenta o preço em 10%
             meu_jogador.salario *= decimal.Decimal(1.05)  # Aumenta o salario em 5%
             meu_jogador.save()
-            print(f'Nome:{meu_jogador.nome} Preço: {meu_jogador.preco}')
 
         if 'nome_jogador' in request.session:
             del request.session['nome_jogador']
+
         context = {'posts':posts, "leilao_ativo": leilao.ativo}
         return render(request,'leiloes.html',context)
 
@@ -173,6 +173,7 @@ def comprar_jogador(request, player_id):
     # Transação atômica para garantir consistência dos dados
     with transaction.atomic():
         if time_anterior:
+            # atribuindo os valores ao antigo dono do jogador ao ser comprado
             dono_anterior = time_anterior.usuario
             perfil_proprietario_anterior = OrcamentoTime.objects.get(usuario=dono_anterior)
             perfil_proprietario_anterior.dinheiro_time += jogador.preco
@@ -184,20 +185,17 @@ def comprar_jogador(request, player_id):
                 perfil_proprietario_anterior.salario_time = 0
                 perfil_proprietario_anterior.save()
 
-
+        # verificando se o saldo do usuario é nagativo
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
-        if perfil_comprador.dinheiro_time < 50000:
-            messages.error(request, 'Você não tem saldo suficiente para compra')
+        if perfil_comprador.dinheiro_time <= 50000:
+            messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
             return redirect('leiloes')
-        print(f"valor do jogador: {jogador.preco}")
-        # perfil_comprador.dinheiro_time -= jogador.preco
-        print(perfil_comprador.dinheiro_time)
+
+        # perfil do usuario comprador
         perfil_comprador.dinheiro_time -= jogador.preco
         perfil_comprador.salario_time += jogador.salario
         perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
         perfil_comprador.save()
-
-        print(perfil_comprador.dinheiro_time)
 
         jogador.time_usuario = team
         jogador.save()
