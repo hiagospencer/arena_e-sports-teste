@@ -98,6 +98,14 @@ def reset_jogador():
         jogador.salario = 2000
         jogador.time_usuario = None
         jogador.save()
+def resetar_orcamento():
+    usuarios = OrcamentoTime.objects.all()
+    for usuario in usuarios:
+        usuario.dinheiro_time = 60000
+        usuario.salario_time = 0
+        usuario.saldo = 60000
+        usuario.save()
+
 
 def notificacao(titulo, mensagem):
 	notificar = notifypy.Notify(enable_logging=True)

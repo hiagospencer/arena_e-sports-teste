@@ -177,7 +177,7 @@ def comprar_jogador(request, player_id):
             perfil_proprietario_anterior = OrcamentoTime.objects.get(usuario=dono_anterior)
             perfil_proprietario_anterior.dinheiro_time += jogador.preco
             perfil_proprietario_anterior.salario_time -= jogador.salario
-            # perfil_proprietario_anterior.saldo = (perfil_proprietario_anterior.dinheiro_time - perfil_proprietario_anterior.salario_time)
+            perfil_proprietario_anterior.saldo = (perfil_proprietario_anterior.dinheiro_time - perfil_proprietario_anterior.salario_time)
             perfil_proprietario_anterior.save()
 
             if perfil_proprietario_anterior.salario_time < 0:
@@ -186,16 +186,19 @@ def comprar_jogador(request, player_id):
 
 
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
-
         if perfil_comprador.dinheiro_time < 50000:
             messages.error(request, 'Você não tem saldo suficiente para compra')
             return redirect('leiloes')
-
-
+        print(f"valor do jogador: {jogador.preco}")
+        # perfil_comprador.dinheiro_time -= jogador.preco
+        print(perfil_comprador.dinheiro_time)
         perfil_comprador.dinheiro_time -= jogador.preco
         perfil_comprador.salario_time += jogador.salario
-        # perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
+        perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
         perfil_comprador.save()
+
+        print(perfil_comprador.dinheiro_time)
+
         jogador.time_usuario = team
         jogador.save()
         team.save()
@@ -210,7 +213,7 @@ def comprar_jogador(request, player_id):
     # preco_total_elenco = sum(jogador.preco for jogador in jogadores)
     salario_total_elenco = sum(jogador.salario for jogador in jogadores)
 
-    # orcamento_time.dinheiro_time -= preco_total_elenco
+    orcamento_time.dinheiro_time = perfil_comprador.dinheiro_time
     orcamento_time.salario_time = salario_total_elenco
     orcamento_time.saldo = orcamento_time.dinheiro_time - orcamento_time.salario_time
     orcamento_time.save()
