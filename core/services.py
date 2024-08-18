@@ -91,6 +91,7 @@ def atualizar_classificacao(jogo):
     orcamento_casa.save()
     orcamento_visitante.save()
 
+
 def reset_jogador():
     jogadores = DadosEafc.objects.filter(time_usuario__isnull=False)
     for jogador in jogadores:
@@ -99,7 +100,7 @@ def reset_jogador():
         jogador.time_usuario = None
         jogador.save()
 
-def resetar_orcamento():
+def reset_orcamento():
     usuarios = OrcamentoTime.objects.all()
     for usuario in usuarios:
         usuario.dinheiro_time = 30000
@@ -138,24 +139,6 @@ def dados_fifa():
             avatar=truncate_string(row['Imagem'], 200),
             )
         jogadores.save()
-        # overall.append(row['Overall'])
-        # posicoes.append(row['Posicao'])
-        # imagens.append(row['Imagem'])
-
-    # jogadores_dict = {
-    #     "nomes":nomes,
-    #     "overall":overall,
-    #     "posicao": posicoes,
-    #     "imagem":imagens
-    # }
-
-    # jogadores  = DadosEafc.objects.create(
-    #     nome=jogadores_dict['nomes'],
-    #     overall=jogadores_dict['overall'],
-    #     posicao=jogadores_dict['posicao'],
-    #     avatar=jogadores_dict['imagem'],
-    #             )
-    # jogadores.save()
 
 
 

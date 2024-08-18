@@ -90,7 +90,8 @@ def criar_emblemas_times(request):
 @user_passes_test(lambda u: u.is_superuser)
 def zerar_pontos_classificacao(request):
     # Essa views só é acessada pelo o superuser
-    # reset_jogador()
+    reset_jogador()
+    reset_orcamento()
     resetar_campeonato()
     return render(request, 'zerar_pontos_classificacao.html')
 
@@ -187,12 +188,12 @@ def comprar_jogador(request, player_id):
 
         # verificando se o saldo do usuario é nagativo
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
-
-        # Define o limite de saldo negativo permitido (até -50% do saldo atual)
-        valor_total_negativo = decimal.Decimal(perfil_comprador.dinheiro_time) * decimal.Decimal(-0.7)
-        if perfil_comprador.dinheiro_time < valor_total_negativo or perfil_comprador.dinheiro_time < jogador.preco:
-            messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
-            return redirect('leiloes')
+        if perfil_comprador.dinheiro_time <= jogador.preco:
+            # Define o limite de saldo negativo permitido (até -50% do saldo atual) e o valor do jogador
+            valor_total_negativo = decimal.Decimal(perfil_comprador.dinheiro_time) * decimal.Decimal(-0.7)
+            if perfil_comprador.dinheiro_time < valor_total_negativo :
+                messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
+                return redirect('leiloes')
 
         # perfil do usuario comprador
         perfil_comprador.dinheiro_time -= jogador.preco
@@ -211,7 +212,6 @@ def comprar_jogador(request, player_id):
     messages.success(request, f'Você comprou {jogador.nome} por ${jogador.preco:.2f}')
     request.session['nome_jogador'] = jogador.nome
 
-    # preco_total_elenco = sum(jogador.preco for jogador in jogadores)
     salario_total_elenco = sum(jogador.salario for jogador in jogadores)
 
     orcamento_time.dinheiro_time = perfil_comprador.dinheiro_time
