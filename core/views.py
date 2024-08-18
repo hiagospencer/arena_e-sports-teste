@@ -219,9 +219,9 @@ def comprar_jogador(request, player_id):
         # Transaction.objects.create(buyer=request.user, seller=jogador.time_usuario, player=jogador)
 
         # Criar notificação
-        if time_anterior and time_anterior.usuario != request.user:
-            mensagem = f'Seu jogador {jogador.nome} foi comprado por {request.user.username}.'
-            notificacao('Arena eSports', mensagem)
+        # if time_anterior and time_anterior.usuario != request.user:
+        #     mensagem = f'Seu jogador {jogador.nome} foi comprado por {request.user.username}.'
+        #     notificacao('Arena eSports', mensagem)
 
     messages.success(request, f'Você comprou {jogador.nome} por ${jogador.preco:.2f}')
     request.session['nome_jogador'] = jogador.nome
