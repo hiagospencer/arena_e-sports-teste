@@ -36,9 +36,9 @@ class Partida(models.Model):
 
 class OrcamentoTime(models.Model):
     usuario = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
-    dinheiro_time = models.DecimalField(default=60000, max_digits=100, decimal_places=2)
+    dinheiro_time = models.DecimalField(default=30000, max_digits=100, decimal_places=2)
     salario_time = models.DecimalField(default=0, max_digits=100, decimal_places=2)
-    saldo = models.DecimalField(default=60000, max_digits=100, decimal_places=2)
+    saldo = models.DecimalField(default=30000, max_digits=100, decimal_places=2)
 
     def __Str__(self):
         return f"usuario: {self.usuario} saldo: {self.saldo}"
@@ -101,7 +101,7 @@ class Verificacao(models.Model):
     is_verificado = models.BooleanField(default=False)
     notificacao_true = models.BooleanField(default=False)
 
-    
+
     def __str__(self):
         return f"{self.is_verificado}"
 

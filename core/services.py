@@ -92,18 +92,19 @@ def atualizar_classificacao(jogo):
     orcamento_visitante.save()
 
 def reset_jogador():
-    jogadores = DadosEafc.objects.all()
+    jogadores = DadosEafc.objects.filter(time_usuario__isnull=False)
     for jogador in jogadores:
-        jogador.preco = 4000
-        jogador.salario = 2000
+        jogador.preco = 2000
+        jogador.salario = 200
         jogador.time_usuario = None
         jogador.save()
+
 def resetar_orcamento():
     usuarios = OrcamentoTime.objects.all()
     for usuario in usuarios:
-        usuario.dinheiro_time = 60000
+        usuario.dinheiro_time = 30000
         usuario.salario_time = 0
-        usuario.saldo = 60000
+        usuario.saldo = 30000
         usuario.save()
 
 

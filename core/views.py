@@ -55,7 +55,6 @@ def homepage(request):
 @login_required(login_url="login/")
 def classificacao(request):
     posicao_usuario = Classificacao.objects.all().order_by('-pontos', '-saldo_gols', '-vitoria')
-
     return render(request, 'classificacao.html', {'classificacao': posicao_usuario})
 
 
@@ -124,6 +123,7 @@ def salvar_jogos(request):
 
 @login_required(login_url="login/")
 def leiloes(request):
+
     nome_pesquisa = request.GET.get('pesquisar')
     if nome_pesquisa:
         jogadores = DadosEafc.objects.filter(nome__icontains=nome_pesquisa)
@@ -146,7 +146,7 @@ def leiloes(request):
         posts = paginator.get_page(page_obj)
         if nome_jogador:
             meu_jogador = DadosEafc.objects.get(nome=nome_jogador )
-            meu_jogador.preco *= decimal.Decimal(1.10)  # Aumenta o preço em 10%
+            meu_jogador.preco *= decimal.Decimal(1.40)  # Aumenta o preço em 40%
             meu_jogador.salario *= decimal.Decimal(1.05)  # Aumenta o salario em 5%
             meu_jogador.save()
 
@@ -187,7 +187,11 @@ def comprar_jogador(request, player_id):
 
         # verificando se o saldo do usuario é nagativo
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
-        if perfil_comprador.dinheiro_time <= 50000:
+
+        # Define o limite de saldo negativo permitido (até -50% do saldo atual)
+        valor_total_negativo = decimal.Decimal(perfil_comprador.dinheiro_time) * decimal.Decimal(-0.7)
+        print(valor_total_negativo)
+        if perfil_comprador.dinheiro_time < valor_total_negativo:
             messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
             return redirect('leiloes')
 
