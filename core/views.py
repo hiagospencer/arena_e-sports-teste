@@ -175,9 +175,9 @@ def comprar_jogador(request, player_id):
       # Verifica o número de compras entre o comprador e o vendedor
     # transaction_count = Transaction.objects.filter(buyer=request.user, seller=jogador.time_usuario).count()
 
-    if transaction_count >= 10:
-        messages.error(request, 'Você já comprou 10 jogadores deste usuário. Não pode comprar mais.')
-        return redirect('leiloes')
+    # if transaction_count >= 10:
+    #     messages.error(request, 'Você já comprou 10 jogadores deste usuário. Não pode comprar mais.')
+    #     return redirect('leiloes')
 
     # Transação atômica para garantir consistência dos dados
     with transaction.atomic():
@@ -219,9 +219,9 @@ def comprar_jogador(request, player_id):
         # Transaction.objects.create(buyer=request.user, seller=jogador.time_usuario, player=jogador)
 
         # Criar notificação
-        # if time_anterior and time_anterior.usuario != request.user:
-        #     mensagem = f'Seu jogador {jogador.nome} foi comprado por {request.user.username}.'
-        #     notificacao('Arena eSports', mensagem)
+        if time_anterior and time_anterior.usuario != request.user:
+            mensagem = f'Seu jogador {jogador.nome} foi comprado por {request.user.username}.'
+            notificacao('Arena eSports', mensagem)
 
     messages.success(request, f'Você comprou {jogador.nome} por ${jogador.preco:.2f}')
     request.session['nome_jogador'] = jogador.nome
