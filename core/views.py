@@ -147,7 +147,7 @@ def leiloes(request):
         posts = paginator.get_page(page_obj)
         if nome_jogador:
             meu_jogador = DadosEafc.objects.get(nome=nome_jogador )
-            meu_jogador.preco *= decimal.Decimal(1.40)  # Aumenta o preço em 40%
+            meu_jogador.preco *= decimal.Decimal(1.05)  # Aumenta o preço em 5%
             meu_jogador.salario *= decimal.Decimal(1.05)  # Aumenta o salario em 5%
             meu_jogador.save()
 
@@ -173,7 +173,7 @@ def comprar_jogador(request, player_id):
         return redirect('leiloes')
 
       # Verifica o número de compras entre o comprador e o vendedor
-    transaction_count = Transaction.objects.filter(buyer=request.user, seller=jogador.time_usuario).count()
+    # transaction_count = Transaction.objects.filter(buyer=request.user, seller=jogador.time_usuario).count()
 
     if transaction_count >= 10:
         messages.error(request, 'Você já comprou 10 jogadores deste usuário. Não pode comprar mais.')
@@ -216,7 +216,7 @@ def comprar_jogador(request, player_id):
         team.save()
 
         # Registra a transação
-        Transaction.objects.create(buyer=request.user, seller=jogador.time_usuario, player=jogador)
+        # Transaction.objects.create(buyer=request.user, seller=jogador.time_usuario, player=jogador)
 
         # Criar notificação
         if time_anterior and time_anterior.usuario != request.user:

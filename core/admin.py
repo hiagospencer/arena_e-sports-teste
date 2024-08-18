@@ -45,6 +45,12 @@ class LeilaoAtivoAdmin(admin.ModelAdmin):
     list_display = ["ativo", "contratacao_ativo"]
     search_fields = ["ativo"]
 
+class TransactionAdmin(admin.ModelAdmin):
+    model = Transaction
+    list_display = ["buyer", "seller"]
+    search_fields = ["buyer"]
+
+
 admin.site.register(Partida,PartidaAdmin)
 admin.site.register(Rodada)
 admin.site.register(Usuario, UsuarioAdmin)
@@ -54,4 +60,5 @@ admin.site.register(OrcamentoTime, OrcamentoTimeAdmin)
 admin.site.register(DadosEafc, DadosEafcTimeAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(LeilaoAtivo, LeilaoAtivoAdmin)
+admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(TradeProposal)
