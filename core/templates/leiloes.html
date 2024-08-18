@@ -22,6 +22,11 @@ eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
                     Limpar
                   </a>
                 </div>
+                <div class="col-auto">
+                  {% for usuario in jogador_usuario %}
+                  <span class="pt-1" style="display: block"><b>Saldo:</b> R$ {{ usuario.saldo|intcomma}}</span>
+                  {% endfor %}
+                </div>
               </div>
               </form>
             {% if messages %}
