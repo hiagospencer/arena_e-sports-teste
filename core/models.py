@@ -63,8 +63,6 @@ class Team(models.Model):
 
     def __str__(self):
         return self.nome
-
-
 class DadosEafc(models.Model):
     nome = models.CharField(max_length=200, null=True, blank=True)
     overall = models.CharField(max_length=200, null=True, blank=True)
@@ -72,7 +70,7 @@ class DadosEafc(models.Model):
     posicao = models.CharField(max_length=200, null=True, blank=True)
     preco = models.DecimalField(default=4000, max_digits=100, decimal_places=2)
     salario = models.DecimalField(default=2000, max_digits=100, decimal_places=2)
-    time_usuario = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
+    time_usuario = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True, related_name='jogador')
     comprado = models.BooleanField(default=False)
 
 

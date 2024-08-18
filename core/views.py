@@ -124,7 +124,7 @@ def salvar_jogos(request):
 
 @login_required(login_url="login/")
 def leiloes(request):
-
+    jogador_usuario = OrcamentoTime.objects.filter(usuario=request.user)
     nome_pesquisa = request.GET.get('pesquisar')
     if nome_pesquisa:
         jogadores = DadosEafc.objects.filter(nome__icontains=nome_pesquisa)
@@ -134,7 +134,7 @@ def leiloes(request):
         page_obj = request.GET.get('page')
         posts = paginator.get_page(page_obj)
 
-        context = {'posts':posts, "leilao_ativo": leilao.ativo}
+        context = {'posts':posts, "leilao_ativo": leilao.ativo, 'jogador_usuario':jogador_usuario}
         return render(request,'leiloes.html',context)
     else:
         nome_jogador = request.session.get('nome_jogador')
@@ -148,13 +148,13 @@ def leiloes(request):
         if nome_jogador:
             meu_jogador = DadosEafc.objects.get(nome=nome_jogador )
             meu_jogador.preco *= decimal.Decimal(1.05)  # Aumenta o preço em 5%
-            meu_jogador.salario *= decimal.Decimal(1.05)  # Aumenta o salario em 5%
+            meu_jogador.salario = decimal.Decimal(meu_jogador.preco) * decimal.Decimal(0.10) # Aumenta o salario em 5%
             meu_jogador.save()
 
         if 'nome_jogador' in request.session:
             del request.session['nome_jogador']
 
-        context = {'posts':posts, "leilao_ativo": leilao.ativo}
+        context = {'posts':posts, "leilao_ativo": leilao.ativo, 'jogador_usuario':jogador_usuario}
         return render(request,'leiloes.html',context)
 
 
@@ -165,6 +165,8 @@ def comprar_jogador(request, player_id):
     team, created = Team.objects.get_or_create(usuario=request.user)
     jogadores = DadosEafc.objects.filter(time_usuario=team)
     orcamento_time = OrcamentoTime.objects.get(usuario=request.user)
+    perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
+    total_jogador_comprador = Team.objects.get(usuario=request.user)
     team.nome = usuario.nome
     time_anterior = jogador.time_usuario
 
@@ -175,9 +177,10 @@ def comprar_jogador(request, player_id):
       # Verifica o número de compras entre o comprador e o vendedor
     # transaction_count = Transaction.objects.filter(buyer=request.user, seller=jogador.time_usuario).count()
 
-    # if transaction_count >= 10:
-    #     messages.error(request, 'Você já comprou 10 jogadores deste usuário. Não pode comprar mais.')
-    #     return redirect('leiloes')
+    # Verifica se o time do comprador já tem 20 jogadores
+    if total_jogador_comprador.jogador.count() > 20:
+        messages.error(request, 'Seu time já tem 20 jogadores. Você não pode comprar mais jogadores.')
+        return redirect('leiloes')
 
     # Transação atômica para garantir consistência dos dados
     with transaction.atomic():
@@ -194,14 +197,16 @@ def comprar_jogador(request, player_id):
                 perfil_proprietario_anterior.salario_time = 0
                 perfil_proprietario_anterior.save()
 
+
+
         # verificando se o saldo do usuario é nagativo
-        perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
-        if perfil_comprador.dinheiro_time <= jogador.preco:
-            messages.error(request, 'Você não tem dinheiro suficiente para comprar esse jogador!')
+        if perfil_comprador.saldo <= jogador.preco:
+            messages.error(request, 'Você não tem saldo suficiente para comprar esse jogador!')
             return redirect('leiloes')
+
             # Define o limite de saldo negativo permitido (até -50% do saldo atual) e o valor do jogador
-        valor_total_negativo = decimal.Decimal(perfil_comprador.dinheiro_time) * decimal.Decimal(-0.7)
-        if perfil_comprador.dinheiro_time < valor_total_negativo :
+        valor_total_negativo = decimal.Decimal(perfil_comprador.saldo) * decimal.Decimal(-0.7)
+        if perfil_comprador.saldo < valor_total_negativo :
             messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
             return redirect('leiloes')
 
