@@ -189,11 +189,13 @@ def comprar_jogador(request, player_id):
         # verificando se o saldo do usuario é nagativo
         perfil_comprador = OrcamentoTime.objects.get(usuario=request.user)
         if perfil_comprador.dinheiro_time <= jogador.preco:
+            messages.error(request, 'Você não tem dinheiro suficiente para comprar esse jogador!')
+            return redirect('leiloes')
             # Define o limite de saldo negativo permitido (até -50% do saldo atual) e o valor do jogador
-            valor_total_negativo = decimal.Decimal(perfil_comprador.dinheiro_time) * decimal.Decimal(-0.7)
-            if perfil_comprador.dinheiro_time < valor_total_negativo :
-                messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
-                return redirect('leiloes')
+        valor_total_negativo = decimal.Decimal(perfil_comprador.dinheiro_time) * decimal.Decimal(-0.7)
+        if perfil_comprador.dinheiro_time < valor_total_negativo :
+            messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
+            return redirect('leiloes')
 
         # perfil do usuario comprador
         perfil_comprador.dinheiro_time -= jogador.preco
