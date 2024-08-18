@@ -190,8 +190,7 @@ def comprar_jogador(request, player_id):
 
         # Define o limite de saldo negativo permitido (até -50% do saldo atual)
         valor_total_negativo = decimal.Decimal(perfil_comprador.dinheiro_time) * decimal.Decimal(-0.7)
-        print(valor_total_negativo)
-        if perfil_comprador.dinheiro_time < valor_total_negativo:
+        if perfil_comprador.dinheiro_time < valor_total_negativo or perfil_comprador.dinheiro_time < jogador.preco:
             messages.error(request, 'Você passou do limíte no seu orçamento salárial!')
             return redirect('leiloes')
 
