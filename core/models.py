@@ -76,6 +76,12 @@ class DadosEafc(models.Model):
     comprado = models.BooleanField(default=False)
 
 
+class Transaction(models.Model):
+    buyer = models.ForeignKey(User, related_name='buyer_transactions', on_delete=models.CASCADE)
+    seller = models.ForeignKey(User, related_name='seller_transactions', on_delete=models.CASCADE)
+    player = models.ForeignKey(DadosEafc, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
 class TradeProposal(models.Model):
     proposer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_made')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_received')
