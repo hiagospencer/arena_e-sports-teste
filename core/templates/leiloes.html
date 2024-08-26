@@ -12,34 +12,45 @@ eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
             <h5 class="card-title">Leilões de Jogadores</h5>
             <p>O sistema de leilões oferece ao usuário uma experiência de pode montar seu time de acordo com seu gosto.
               Para isso, é preciso que seu lance seja o maior ao final do periodo do leilão.</p>
-              <form action="?" method="GET">
+            <form action="?" method="GET">
               <div class="row g-3 align-items-center mt-2">
                 <div class="col-auto">
                   <input type="search" id="pesquisar" name="pesquisar" class="form-control" placeholder="Pesquisar...">
                 </div>
+                <div class="col-md-2 w-100">
+                  <select id="inputState" name="posicao" class="form-select w-100">
+                    <option value="">Posição</option>
+                    {% for posicao in posicoes %}
+                    <option value="{{ posicao }}" >{{ posicao }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
                 <div class="col-auto">
-                  <a href="{% url 'leiloes' %}" class="btn btn-outline-info">
+                  <button type="submit" class="btn btn-primary">
+                    Filtrar
+                  </button>
+                </div>
+                <div class="col-auto">
+                  <a href="{% url 'leiloes' %}" class="btn btn-dark" style="color: #FFF !important;">
                     Limpar
                   </a>
                 </div>
                 <div class="col-auto">
                   {% for usuario in jogador_usuario %}
-                  <span class="pt-1" style="display: block"><b>Saldo:</b> R$ {{ usuario.saldo|intcomma}}</span>
+                  <span class="pt-1" style="display: block"><b>Saldo:</b> R$ {{ usuario.saldo_time|intcomma}}</span>
                   {% endfor %}
                 </div>
               </div>
-              </form>
+            </form>
             {% if messages %}
 
-              {% for message in messages %}
-              <div class="alert alert-info mt-2" role="alert">
-                <span{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</span>
-              </div>
-                {% endfor %}
+            {% for message in messages %}
+            <div class="alert alert-info mt-2" role="alert">
+              <span{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</span>
+            </div>
+            {% endfor %}
 
             {% endif %}
-
-
             <!-- Table with stripped rows -->
             <table class="table table-dark table-striped mt-2">
               <thead>
@@ -72,27 +83,30 @@ eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
 
 
                   {% if leilao_ativo %}
-                      {% if jogador.time_usuario %}
-                          {% if jogador.time_usuario.usuario != request.user %}
-                          <td>
-                            <form method="post" action="{% url 'comprar_jogador' jogador.id %}" onsubmit="return confirmarEnvio('{{ jogador.id }}', '{{ jogador.nome }}', '{{ jogador.preco }}')">
-                              {% csrf_token %}
-                              <button class="btn btn-outline-light" type="submit"><i class="bi bi-bag"></i></button>
-                            </form>
-                          </td>
-                          {% endif %}
-                      {% else %}
-                      <td>
-                        <form method="post" action="{% url 'comprar_jogador' jogador.id %}" onsubmit="return confirmarEnvio('{{ jogador.id }}', '{{ jogador.nome }}', '{{ jogador.preco }}')">
-                          {% csrf_token %}
-                            <button class="btn btn-outline-light" type="submit"><i class="bi bi-bag"></i></button>
-                        </form>
-                      </td>
-                      {% endif %}
+                  {% if jogador.time_usuario %}
+                  {% if jogador.time_usuario.usuario != request.user %}
+                  <td>
+                    <form method="post" action="{% url 'comprar_jogador' jogador.id %}"
+                      onsubmit="return confirmarEnvio('{{ jogador.id }}', '{{ jogador.nome }}', '{{ jogador.preco }}')">
+                      {% csrf_token %}
+                      <button class="btn btn-outline-light" type="submit"><i class="bi bi-bag"></i></button>
+                    </form>
+                  </td>
+                  {% endif %}
                   {% else %}
-                    <td>
-                      <button class="btn btn-outline-light" onclick="leilaoFechado()"><i class="bi bi-lock-fill"></i></button>
-                    </td>
+                  <td>
+                    <form method="post" action="{% url 'comprar_jogador' jogador.id %}"
+                      onsubmit="return confirmarEnvio('{{ jogador.id }}', '{{ jogador.nome }}', '{{ jogador.preco }}')">
+                      {% csrf_token %}
+                      <button class="btn btn-outline-light" type="submit"><i class="bi bi-bag"></i></button>
+                    </form>
+                  </td>
+                  {% endif %}
+                  {% else %}
+                  <td>
+                    <button class="btn btn-outline-light" onclick="leilaoFechado()"><i
+                        class="bi bi-lock-fill"></i></button>
+                  </td>
                   {% endif %}
                 </tr>
                 {% endfor %}
@@ -101,6 +115,15 @@ eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
             </table>
             <!-- End Table with stripped rows -->
             {% include 'auxiliar/pagination.html' %}
+
+            <h2>Últimas Transferências:</h2>
+            {% if leilao_ativo %}
+              <div id="news-container" hx-get="{% url 'load_news' %}" hx-trigger="every 2s" hx-swap="innerHTML">
+
+                {% include 'auxiliar/noticias.html' %}
+              </div>
+            {% endif %}
+
           </div>
         </div>
   </section>
@@ -115,10 +138,10 @@ eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
     alert("Periodo de leilão fechado!")
   }
 
-   function confirmarEnvio(playerId, playerName, playerPrice) {
-      var mensagem = `Você pretende comprar ${playerName} por ${playerPrice} ?`;
-      return confirm(mensagem);
-    }
+  function confirmarEnvio(playerId, playerName, playerPrice) {
+    var mensagem = `Você pretende comprar ${playerName} por ${playerPrice} ?`;
+    return confirm(mensagem);
+  }
 
 </script>
 {% endblock %}

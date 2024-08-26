@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from .htmx_views import *
 
 urlpatterns = [
     path('', homepage, name='homepage'),
@@ -26,8 +27,24 @@ urlpatterns = [
     path('trade/confirm/<int:trade_id>/', confirm_trade_proposer, name='confirm_trade_proposer'),
     path('trade/respond/<int:trade_id>/', respond_trade, name='respond_trade'),
 
+    #perfil
     path('perfil', perfil, name='perfil'),
 
+
+    #Login
     path('login/', fazer_login, name='login'),
     path('logout', fazer_logout, name='logout'),
 ]
+
+
+# urls do HTMX
+htmx_urlpatterns = [
+    #noticias & notificacao
+    path('load-news/', load_news, name='load_news'),
+    path('load-notificacao/', load_notificacao, name='load_notificacao'),
+    path('notificacoes/', ver_notificacoes, name='notificacoes'),
+    path('notificacoes/marcar_como_lida/<int:notificacao_id>/', marcar_como_lida, name='marcar_como_lida'),
+]
+
+
+urlpatterns += htmx_urlpatterns

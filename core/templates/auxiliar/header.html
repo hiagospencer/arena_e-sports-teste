@@ -9,10 +9,11 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-
     <nav class="header-nav ms-auto">
-      <ul class="d-flex align-items-center">
-        <li class="nav-item dropdown pe-4">
+
+      {% include 'auxiliar/icon_notificacao.html' %}
+
+        <li class="nav-item dropdown pe-4 d-none d-md-block" id="mensagem-usuario">
             {% if user.is_authenticated %}
             <span class="card-title">Bem vindo(a), {{user.get_username}}</span>
           {% else %}

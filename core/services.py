@@ -8,7 +8,7 @@ from .api_times import get_api_eafc
 import os
 from pathlib import Path
 from django.db import IntegrityError
-
+import locale
 
 
 
@@ -79,9 +79,12 @@ def atualizar_classificacao(jogo):
         orcamento_casa.dinheiro_time += 4000
         orcamento_visitante.dinheiro_time += 2000
 
+    time_casa.jogos += 1
     time_casa.gols_pro += placar_casa
     time_casa.gols_contra += placar_visitante
     time_casa.saldo_gols = (time_casa.gols_pro - time_casa.gols_contra)
+
+    time_visitante.jogos += 1
     time_visitante.gols_pro += placar_visitante
     time_visitante.gols_contra += placar_casa
     time_visitante.saldo_gols = (time_visitante.gols_pro - time_visitante.gols_contra)
@@ -94,11 +97,22 @@ def atualizar_classificacao(jogo):
 
 def reset_jogador():
     jogadores = DadosEafc.objects.filter(time_usuario__isnull=False)
-    for jogador in jogadores:
-        jogador.preco = 2000
-        jogador.salario = 200
-        jogador.time_usuario = None
-        jogador.save()
+    if jogadores:
+        for jogador in jogadores:
+            jogador.preco = 2000
+            jogador.salario = 200
+            jogador.time_usuario = None
+            jogador.save()
+        print("Jogadores dos clubes resetado")
+    else:
+        jogadores = DadosEafc.objects.all()
+        for jogador in jogadores:
+            jogador.preco = 2000
+            jogador.salario = 200
+            jogador.time_usuario = None
+            jogador.save()
+        print("Jogadores sem clubes resetado")
+
 
 def reset_orcamento():
     usuarios = OrcamentoTime.objects.all()
@@ -128,7 +142,7 @@ def dados_fifa():
     overall = []
     posicoes = []
     imagens = []
-    dataFrame = pd.read_excel(os.path.join(BASE_DIR, 'arquivos/jogadores.xlsx'))
+    dataFrame = pd.read_excel(os.path.join(BASE_DIR, 'arquivos/jogadores_novos.xlsx'))
     # print(dataFrame)
     for index, row in dataFrame.iterrows():
 
@@ -153,3 +167,10 @@ def resetar_campeonato():
         usuario.gols_contra = 0
         usuario.saldo_gols = 0
         usuario.save()
+
+
+def moeda(dinheiro):
+    valor = dinheiro
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+    valor = locale.currency(valor, grouping=True, symbol=None)
+    return valor

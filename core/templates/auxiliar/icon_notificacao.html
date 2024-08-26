@@ -1,0 +1,38 @@
+<ul class="d-flex align-items-center" id="notificacao-container" hx-get="{% url 'load_notificacao' %}" hx-trigger="every 6s" hx-swap="innerHTML">
+        <li class="nav-item dropdown">
+          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            <span class="badge bg-primary badge-number">{{total_notificacoes}}</span>
+          </a><!-- End Notification Icon -->
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+          <li class="dropdown-header">
+            Você tem {{total_notificacoes}} notificações
+            <a href="{% url 'notificacoes' %}"><span class="badge rounded-pill bg-primary p-2 ms-2">Ver todos</span></a>
+          </li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          {% for notificacao in notificacoes %}
+          <a href="{% url 'notificacoes' %}"><li class="notification-item">
+            <i class="bi bi-exclamation-circle text-warning"></i>
+            <div>
+              <h4>Jogador roubado</h4>
+              <p>{{notificacao.mensagem}}</p>
+              <p>{{notificacao.criada_em}}</p>
+            </div>
+          </li></a>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+
+          {% endfor %}
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <!-- <li class="dropdown-footer">
+            Mostrar todas as notificações</a>
+          </li> -->
+
+        </ul><!-- End Notification Dropdown Items -->

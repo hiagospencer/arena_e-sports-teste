@@ -13,14 +13,32 @@ eSports | Contarar Jogador {% endblock%} {% block body %} {% load humanize %}
               Quando o periodo de contratações está aberto, qualquer jogador livre no mercado pode ser contratado.
             </p>
             <form action="?" method="GET">
-              <div class="row g-3 align-items-center ">
+              <div class="row g-3 align-items-center mt-2">
                 <div class="col-auto">
                   <input type="search" id="pesquisar" name="pesquisar" class="form-control" placeholder="Pesquisar...">
                 </div>
+                <div class="col-md-2 w-100">
+                  <select id="inputState" name="posicao" class="form-select w-100">
+                    <option value="" selected>Posição</option>
+                    {% for posicao in posicoes %}
+                    <option value="{{ posicao }}">{{ posicao }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
                 <div class="col-auto">
-                  <a href="{% url 'contratar_jogador' %}" class="btn btn-outline-info">
+                  <button type="submit" class="btn btn-primary">
+                    Filtrar
+                  </button>
+                </div>
+                <div class="col-auto">
+                  <a href="{% url 'leiloes' %}" class="btn btn-dark" style="color: #FFF !important;">
                     Limpar
                   </a>
+                </div>
+                <div class="col-auto">
+                  {% for usuario in jogador_usuario %}
+                  <span class="pt-1" style="display: block"><b>Saldo:</b> R$ {{ usuario.saldo|intcomma}}</span>
+                  {% endfor %}
                 </div>
               </div>
             </form>

@@ -1,30 +1,70 @@
- <!-- ====================== Section pagination ============ -->
+<div class="container mt-4">
 
- <section class="mb-5">
-    <ul class="pagination justify-content-center">
-        {% if posts.has_previous %}
-        <a href="?page=1" class="page-item">
-            <li class="page-link">Primeira</li>
-        </a>
-        <a href="?page={{ posts.previous_page_number }}" class="page-item">
-            <li class="page-link">{{ posts.previous_page_number }}</li>
-        </a>
-        {% endif %}
 
-        <a href=""  class="active page-item">
-            <li class="page-link">{{ posts.number }}</li>
-        </a>
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <!-- Navegação de paginação -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
 
-        {% if posts.has_next %}
+                    {% if posts.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ posts.previous_page_number }}&posicao={{ posicao_selecionada }}">Anterior</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Anterior</span>
+                    </li>
+                    {% endif %}
 
-        <a class="page-item" href="?page={{ posts.next_page_number}}">
-            <li class="page-link">Próximo</li>
-        </a>
-        <a href="?page={{ posts.paginator.num_pages}}" class="page-item">
-            <li class="page-link">Ultima &raquo;</li>
-        </a>
-        {% endif %}
-    </ul>
-  </section>
+                    {% with total_pages=posts.paginator.num_pages %}
+                    {% if total_pages <= 7 %} <!-- Exibir todas as páginas se forem 7 ou menos -->
+                        {% for i in posts.paginator.page_range %}
+                        <li class="page-item {% if posts.number == i %}active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}&posicao={{ posicao_selecionada }}">{{ i }}</a>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <!-- Lógica para exibir apenas 7 páginas -->
+                        {% if posts.number > 4 %}
+                        <li class="page-item"><a class="page-link" href="?page=1&posicao={{ posicao_selecionada }}">1</a></li>
+                        {% if posts.number > 5 %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                        {% endif %}
 
-  <!-- ====================== Fim do pagination ============ -->
+                        {% for i in posts.paginator.page_range %}
+                        {% if i >= posts.number|add:'-3' and i <= posts.number|add:'3' %} <li
+                            class="page-item {% if posts.number == i %}active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}&posicao={{ posicao_selecionada }}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if posts.number < total_pages|add:'-3' %} {% if posts.number < total_pages|add:'-4' %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                {% endif %}
+                                <li class="page-item"><a class="page-link"
+                                        href="?page={{ total_pages }}&posicao={{ posicao_selecionada }}">{{ total_pages }}</a>
+                                </li>
+                                {% endif %}
+                                {% endif %}
+                                {% endwith %}
+
+                                {% if posts.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page={{ posts.next_page_number }}&posicao={{ posicao_selecionada }}">Próxima</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Próxima</span>
+                                </li>
+                                {% endif %}
+                </ul>
+            </nav>
+            <p class="text-center">Página {{ posts.number }} de {{ posts.paginator.num_pages }}</p>
+        </div>
+    </div>
+</div>

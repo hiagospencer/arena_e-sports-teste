@@ -1,4 +1,3 @@
-import decimal
 from django.http import HttpResponse
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import login, logout, authenticate
@@ -9,7 +8,10 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db import transaction
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+import threading
 import pandas as pd
+import locale
+import decimal
 
 from core.forms import *
 from .models import *
@@ -20,6 +22,7 @@ from .services import *
 def homepage(request):
     user = request.user
     verificado = False
+    comentarios = NotificacaoJogo.objects.all().order_by("-data")[:15]
     usuario_criado, criado = Verificacao.objects.get_or_create(user=user)
     usuario_orcamento, criado = OrcamentoTime.objects.get_or_create(usuario=user)
     usuario_classificacao, criado = Classificacao.objects.get_or_create(usuario=user)
@@ -41,14 +44,14 @@ def homepage(request):
     for item in dados:
         if item.email:
             verificado = True
-            context = {"dados":dados, "verificado":verificado, "orcamento":orcamento,"jogadores":jogadores, "quantidade_jogadores": len(jogadores)}
+            context = {"dados":dados, "verificado":verificado, "orcamento":orcamento,"jogadores":jogadores, "quantidade_jogadores": len(jogadores),"comentarios":comentarios}
             return render(request, 'index.html',context)
         else:
             verificado = False
-            context = {"dados":dados, "verificado":verificado, "orcamento":orcamento,"jogadores":jogadores, "quantidade_jogadores": len(jogadores)}
+            context = {"dados":dados, "verificado":verificado, "orcamento":orcamento,"jogadores":jogadores, "quantidade_jogadores": len(jogadores),"comentarios":comentarios}
             return render(request, 'index.html',context)
 
-    context = {"dados":dados, "verificado":verificado, "orcamento":orcamento,"jogadores":jogadores, "quantidade_jogadores": len(jogadores)}
+    context = {"dados":dados, "verificado":verificado, "orcamento":orcamento,"jogadores":jogadores, "quantidade_jogadores": len(jogadores),"comentarios":comentarios}
     return render(request, 'index.html',context)
 
 
@@ -76,7 +79,8 @@ def criar_jogadores(request):
     if DadosEafc.objects.exists():
         return HttpResponse('jogadores já foram criados anteriormente.')
 
-    dados_fifa()
+    thread = threading.Thread(target=dados_fifa)
+    thread.start()
     return HttpResponse('Jogadores criados com sucesso!')
 
 
@@ -100,16 +104,22 @@ def zerar_pontos_classificacao(request):
 @login_required(login_url="login/")
 def salvar_jogos(request):
     formClear = JogoForm()
-    rodadas = Partida.objects.filter(finalizado=False)
 
     if request.method == "POST":
-
+        comentario = request.POST.get('comentario')
         form = JogoForm(request.POST)
         if form.is_valid():
             jogo = form.save()
             atualizar_classificacao(jogo)
+            casa = getattr(jogo, 'time_casa')
+            visitante = getattr(jogo, 'time_visitante')
+            placar_casa = getattr(jogo, 'placar_casa')
+            placar_visitante = getattr(jogo, 'placar_visitante')
 
-            context = {"rodadas":rodadas,'form': formClear,}
+            mensagem = f'{casa} {placar_casa} x {placar_visitante} {visitante}'
+            NotificacaoJogo.objects.create(resultado=mensagem,comentario=comentario)
+
+            context = {'form': formClear,}
             return render(request, 'salvar_jogos.html', context)
 
     else:
@@ -118,14 +128,19 @@ def salvar_jogos(request):
         if request.POST.get('time_casa'):
             form.fields['time_visitante'].queryset = form.fields['time_casa'].queryset.exclude(pk=request.POST.get('time_casa'))
 
-    context = {"rodadas":rodadas,'form': form,}
+    context = {'form': form,}
     return render(request, 'salvar_jogos.html', context)
+
 
 
 @login_required(login_url="login/")
 def leiloes(request):
     jogador_usuario = OrcamentoTime.objects.filter(usuario=request.user)
+    posicoes = DadosEafc.objects.values_list('posicao',flat=True).distinct()
+    news = News.objects.all().order_by('-date')[:10]
+    posicao_selecionada = request.GET.get('posicao')
     nome_pesquisa = request.GET.get('pesquisar')
+    print(posicao_selecionada)
     if nome_pesquisa:
         jogadores = DadosEafc.objects.filter(nome__icontains=nome_pesquisa)
         leilao,criado = LeilaoAtivo.objects.get_or_create()
@@ -134,8 +149,20 @@ def leiloes(request):
         page_obj = request.GET.get('page')
         posts = paginator.get_page(page_obj)
 
-        context = {'posts':posts, "leilao_ativo": leilao.ativo, 'jogador_usuario':jogador_usuario}
+        context = {'posts':posts, "leilao_ativo": leilao.ativo, 'jogador_usuario':jogador_usuario,'news': news, 'posicoes':posicoes,"posicao_selecionada": posicao_selecionada}
         return render(request,'leiloes.html',context)
+
+    elif posicao_selecionada:
+        jogadores = DadosEafc.objects.filter(posicao=posicao_selecionada)
+        leilao,criado = LeilaoAtivo.objects.get_or_create()
+        #paginator
+        paginator = Paginator(jogadores, 20)
+        page_obj = request.GET.get('page')
+        posts = paginator.get_page(page_obj)
+
+        context = {'posts':posts, "leilao_ativo": leilao.ativo, 'jogador_usuario':jogador_usuario,'news': news, 'posicoes':posicoes,"posicao_selecionada": posicao_selecionada}
+        return render(request,'leiloes.html',context)
+
     else:
         nome_jogador = request.session.get('nome_jogador')
         jogadores = DadosEafc.objects.all().order_by('-preco', '-overall')
@@ -154,7 +181,7 @@ def leiloes(request):
         if 'nome_jogador' in request.session:
             del request.session['nome_jogador']
 
-        context = {'posts':posts, "leilao_ativo": leilao.ativo, 'jogador_usuario':jogador_usuario}
+        context = {'posts':posts, "leilao_ativo": leilao.ativo, 'jogador_usuario':jogador_usuario,'news': news, 'posicoes':posicoes,"posicao_selecionada": posicao_selecionada}
         return render(request,'leiloes.html',context)
 
 
@@ -190,13 +217,12 @@ def comprar_jogador(request, player_id):
             perfil_proprietario_anterior = OrcamentoTime.objects.get(usuario=dono_anterior)
             perfil_proprietario_anterior.dinheiro_time += jogador.preco
             perfil_proprietario_anterior.salario_time -= jogador.salario
-            perfil_proprietario_anterior.saldo = (perfil_proprietario_anterior.dinheiro_time - perfil_proprietario_anterior.salario_time)
+            # perfil_proprietario_anterior.saldo = (perfil_proprietario_anterior.dinheiro_time - perfil_proprietario_anterior.salario_time)
             perfil_proprietario_anterior.save()
 
             if perfil_proprietario_anterior.salario_time < 0:
                 perfil_proprietario_anterior.salario_time = 0
                 perfil_proprietario_anterior.save()
-
 
 
         # verificando se o saldo do usuario é nagativo
@@ -213,12 +239,23 @@ def comprar_jogador(request, player_id):
         # perfil do usuario comprador
         perfil_comprador.dinheiro_time -= jogador.preco
         perfil_comprador.salario_time += jogador.salario
-        perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
+        # perfil_comprador.saldo = (perfil_comprador.dinheiro_time - perfil_comprador.salario_time)
         perfil_comprador.save()
 
         jogador.time_usuario = team
         jogador.save()
         team.save()
+
+        # Cria a notícia
+        if time_anterior:
+            news_description = f"{perfil_comprador.usuario} comprou {jogador.nome} de {time_anterior.usuario} por R$ {moeda(jogador.preco)}"
+            News.objects.create(buyer=request.user, seller=time_anterior.usuario, player=jogador, description=news_description)
+        else:
+            valor = jogador.preco
+            locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+            valor = locale.currency(valor, grouping=True, symbol=None)
+            news_description = f"{perfil_comprador.usuario} comprou {jogador.nome} do Sistema por R$ {moeda(jogador.preco)}"
+            News.objects.create(buyer=request.user, seller=None, player=jogador, description=news_description)
 
         # Registra a transação
         # Transaction.objects.create(buyer=request.user, seller=jogador.time_usuario, player=jogador)
@@ -227,15 +264,19 @@ def comprar_jogador(request, player_id):
         if time_anterior and time_anterior.usuario != request.user:
             mensagem = f'Seu jogador {jogador.nome} foi comprado por {request.user.username}.'
             notificacao('Arena eSports', mensagem)
+            Notificacao.objects.create(usuario=time_anterior.usuario,mensagem=mensagem)
 
-    messages.success(request, f'Você comprou {jogador.nome} por ${jogador.preco:.2f}')
+    valor = jogador.preco
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+    valor = locale.currency(valor, grouping=True, symbol=None)
+    messages.success(request, f'Você comprou {jogador.nome} por ${valor}')
     request.session['nome_jogador'] = jogador.nome
 
     salario_total_elenco = sum(jogador.salario for jogador in jogadores)
 
     orcamento_time.dinheiro_time = perfil_comprador.dinheiro_time
     orcamento_time.salario_time = salario_total_elenco
-    orcamento_time.saldo = orcamento_time.dinheiro_time - orcamento_time.salario_time
+    # orcamento_time.saldo = orcamento_time.dinheiro_time - orcamento_time.salario_time
     orcamento_time.save()
     return redirect("leiloes")
 
@@ -243,7 +284,9 @@ def comprar_jogador(request, player_id):
 @login_required(login_url="login/")
 def contratar_jogador(request):
     leilao,criado = LeilaoAtivo.objects.get_or_create()
+    posicoes = DadosEafc.objects.values_list('posicao',flat=True).distinct()
     nome_pesquisa = request.GET.get('pesquisar')
+    posicao_selecionada = request.GET.get('posicao')
     if nome_pesquisa:
         jogadores = DadosEafc.objects.filter(nome__icontains=nome_pesquisa, time_usuario__isnull=True)
         leilao,criado = LeilaoAtivo.objects.get_or_create()
@@ -252,7 +295,17 @@ def contratar_jogador(request):
         page_obj = request.GET.get('page')
         posts = paginator.get_page(page_obj)
 
-        context = {'posts':posts, "contratacao_ativo": leilao.contratacao_ativo}
+        context = {'posts':posts, "contratacao_ativo": leilao.contratacao_ativo,'posicoes':posicoes}
+        return render(request,'contratar.html',context)
+    elif posicao_selecionada:
+        jogadores = DadosEafc.objects.filter(posicao=posicao_selecionada,  time_usuario__isnull=True)
+        leilao,criado = LeilaoAtivo.objects.get_or_create()
+        #paginator
+        paginator = Paginator(jogadores, 20)
+        page_obj = request.GET.get('page')
+        posts = paginator.get_page(page_obj)
+
+        context = {'posts':posts, "contratacao_ativo": leilao.contratacao_ativo,'posicoes':posicoes}
         return render(request,'contratar.html',context)
     else:
         jogadores = jogadores_livre = DadosEafc.objects.filter(time_usuario__isnull=True)
@@ -263,8 +316,9 @@ def contratar_jogador(request):
         page_obj = request.GET.get('page')
         posts = paginator.get_page(page_obj)
 
-    context = {'posts':posts, "contratacao_ativo": leilao.contratacao_ativo}
+    context = {'posts':posts, "contratacao_ativo": leilao.contratacao_ativo,'posicoes':posicoes}
     return render(request, 'contratar.html', context)
+
 
 
 @login_required(login_url="login/")
@@ -285,6 +339,7 @@ def contratar_jogador_time(request, id_jogador):
             return redirect('contratar_jogador')
 
         perfil_comprador.dinheiro_time -= jogador.preco
+        perfil_comprador.salario_time += jogador.salario
         perfil_comprador.save()
 
         #associando o jogador ao usuasrio

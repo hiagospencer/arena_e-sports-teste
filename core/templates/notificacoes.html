@@ -1,0 +1,40 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Leilão {% endblock%} {% block body %} {% load humanize %}
+
+<main id="main" class="main">
+
+    <section class="section w-100">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body collapse1">
+                        <h5 class="card-title">Notificações Não Lidas</h5>
+                        <ul class="list-group">
+                            {% for notificacao in notificacoes_nao_lidas %}
+                            <a href="{% url 'marcar_como_lida' notificacao.id %}">
+                                <li class="list-group-item list-group-item-action"
+                                    hx-post="{% url 'marcar_como_lida' notificacao.id %}" hx-target="this"
+                                    hx-swap="outerHTML">
+                                    {{ notificacao.mensagem }}
+                                    <span class="badge bg-primary float-end">{{ notificacao.criada_em|date:"d/m/Y H:i"
+                                        }}</span>
+                                </li>
+                            </a>
+                            {% empty %}
+                            <li class="list-group-item">Você não tem notificações não lidas.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- Modal de Confirmação -->
+
+</main><!-- End #main -->
+
+
+{% block scripts %}
+
+{% endblock %}
+
+{% endblock %}

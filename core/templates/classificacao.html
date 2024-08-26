@@ -17,13 +17,14 @@ eSports | Classificação{% endblock%} {% block body %}
                   <th></th>
                   <th>Posição</th>
                   <th>Usuário</th>
-                  <th>Pontos</th>
-                  <th>Vitoria</th>
-                  <th>Empate</th>
-                  <th>Derrota</th>
-                  <th>Gols Pro</th>
-                  <th>Gols Contra</th>
-                  <th>Saldo Gols</th>
+                  <th>P</th>
+                  <th>J</th>
+                  <th>V</th>
+                  <th>E</th>
+                  <th>D</th>
+                  <th>GP</th>
+                  <th>GC</th>
+                  <th>SG</th>
                 </tr>
               </thead>
               <tbody>
@@ -33,6 +34,7 @@ eSports | Classificação{% endblock%} {% block body %}
                   <td>{{ forloop.counter }} </td>
                   <td class="d-flex justify-content-cente "><img src="{{ time.usuario.usuario.emblema_time }}" alt="" class="mr-2" width="20" height="20"> {{ time.usuario }}</td>
                   <td>{{ time.pontos }}</td>
+                  <td>{{ time.jogos }}</td>
                   <td>{{ time.vitoria }}</td>
                   <td>{{ time.empate }}</td>
                   <td>{{ time.derrota }}</td>

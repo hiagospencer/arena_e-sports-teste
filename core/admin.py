@@ -8,11 +8,13 @@ class UsuarioAdmin(admin.ModelAdmin):
     model = Usuario
     list_display = ["usuario", "email", "whatsapp", "pagamento"]
     search_fields = ["usuario"]
+    list_filter = ["usuario"]
 
 class TimeEmblemaAdmin(admin.ModelAdmin):
     model = TimesEmblemas
     list_display = ["time", "emblema"]
     search_fields = ["time"]
+    list_filter = ["time"]
 
 class PartidaAdmin(admin.ModelAdmin):
     model = Partida
@@ -23,32 +25,37 @@ class ClassificacaoAdmin(admin.ModelAdmin):
     model = Classificacao
     list_display = ["usuario", "pontos", ]
     search_fields = ["usuario"]
-
+    list_filter = ["usuario"]
 
 class OrcamentoTimeAdmin(admin.ModelAdmin):
     model = OrcamentoTime
     list_display = ["usuario", "saldo", ]
     search_fields = ["usuario"]
+    list_filter = ["usuario"]
 
 class DadosEafcTimeAdmin(admin.ModelAdmin):
     model = DadosEafc
     list_display = ["nome", "overall", "time_usuario", "preco"]
     search_fields = ["nome"]
+    list_filter = ["nome"]
 
 class TeamAdmin(admin.ModelAdmin):
     model = Team
     list_display = ["usuario",]
     search_fields = ["nome"]
+    list_filter = ["usuario"]
+
 
 class LeilaoAtivoAdmin(admin.ModelAdmin):
     model = LeilaoAtivo
     list_display = ["ativo", "contratacao_ativo"]
     search_fields = ["ativo"]
 
-class TransactionAdmin(admin.ModelAdmin):
-    model = Transaction
-    list_display = ["buyer", "seller"]
+class NewsAdmin(admin.ModelAdmin):
+    model = News
+    list_display = ["buyer", "seller", "player"]
     search_fields = ["buyer"]
+
 
 
 admin.site.register(Partida,PartidaAdmin)
@@ -60,5 +67,6 @@ admin.site.register(OrcamentoTime, OrcamentoTimeAdmin)
 admin.site.register(DadosEafc, DadosEafcTimeAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(LeilaoAtivo, LeilaoAtivoAdmin)
-admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(News,NewsAdmin)
 admin.site.register(TradeProposal)
+admin.site.register(Notificacao)

@@ -43,9 +43,15 @@ class OrcamentoTime(models.Model):
     def __Str__(self):
         return f"usuario: {self.usuario} saldo: {self.saldo}"
 
+    @property
+    def saldo_time(self):
+        return self.dinheiro_time - self.salario_time
+
+
 class Classificacao(models.Model):
     usuario = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
     pontos = models.IntegerField(default=0)
+    jogos = models.IntegerField(default=0)
     vitoria = models.IntegerField(default=0)
     empate = models.IntegerField(default=0)
     derrota = models.IntegerField(default=0)
@@ -68,17 +74,49 @@ class DadosEafc(models.Model):
     overall = models.CharField(max_length=200, null=True, blank=True)
     avatar = models.CharField(max_length=200, null=True, blank=True)
     posicao = models.CharField(max_length=200, null=True, blank=True)
-    preco = models.DecimalField(default=4000, max_digits=100, decimal_places=2)
-    salario = models.DecimalField(default=2000, max_digits=100, decimal_places=2)
+    preco = models.DecimalField(default=2000, max_digits=100, decimal_places=2)
+    salario = models.DecimalField(default=200, max_digits=100, decimal_places=2)
     time_usuario = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True, related_name='jogador')
     comprado = models.BooleanField(default=False)
 
 
-class Transaction(models.Model):
-    buyer = models.ForeignKey(User, related_name='buyer_transactions', on_delete=models.CASCADE)
-    seller = models.ForeignKey(User, related_name='seller_transactions', on_delete=models.CASCADE)
+class News(models.Model):
+    buyer = models.ForeignKey(User, related_name='buyer_news', on_delete=models.CASCADE)
+    seller = models.ForeignKey(User, related_name='seller_news',  on_delete=models.SET_NULL, null=True, blank=True)
     player = models.ForeignKey(DadosEafc, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
+
+    def __str__(self):
+        return f"Notícia: {self.player.name} foi transferido de {self.seller.username} para {self.buyer.username}"
+
+class NotificacaoJogo(models.Model):
+    resultado = models.CharField(max_length=200, null=True, blank=True)
+    comentario = models.TextField()
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"resultado: {self.resultado} - {self.data}"
+
+
+class Notificacao(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notificacoes')
+    mensagem = models.TextField()
+    lida = models.BooleanField(default=False)
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notificação para {self.usuario.username} - {self.criada_em.strftime('%d/%m/%Y %H:%M')}"
+
+    @staticmethod
+    def count_unread(user):
+        return Notificacao.objects.filter(usuario=user, lida=False).count()
+
+    @staticmethod
+    def count_all(user):
+        return Notificacao.objects.filter(usuario=user, lida=False).count()
+
+
 
 class TradeProposal(models.Model):
     proposer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proposals_made')

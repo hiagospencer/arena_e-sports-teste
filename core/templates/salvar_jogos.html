@@ -26,9 +26,16 @@ eSports | Salvar Jogos {% endblock%} {% block body %} {% load crispy_forms_tags 
               {{ form.placar_visitante|as_crispy_field }}
             </div>
           </div>
+          <div class="row mb-3">
+            <label for="inputPassword" class="col-sm-2 col-form-label">Comentário:</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" style="height: 100px" placeholder="Deixe seu comentário sobre o jogo..."
+                name="comentario"></textarea>
+            </div>
+          </div>
           <button type="submit" class="btn btn-primary">Salvar</button>
         </form>
-        
+
         <!-- === Fim da sessão de apostas ==== -->
       </div>
     </div>
