@@ -48,84 +48,87 @@ eSports {% endblock%} {% block body %} {% load l10n %} {% load humanize %}
       </div>
       <!-- End Customers Card -->
 
-      <!-- Revenue Card -->
-      <div class="col-xxl-6 col-md-12">
-        <div class="card info-card revenue-card">
-          <div class="card-body">
-            <h5 class="card-title">
-              Orçamento <span>| Temporada Atual</span>
-            </h5>
-            {% for usuario in orcamento %}
-            <div class="d-flex align-items-center">
-              <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                <i class="bi bi-currency-dollar"></i>
-              </div>
-              <div class="ps-3">
-                <h6>R$ {{ usuario.dinheiro_time|intcomma }}</h6>
-                <span class="pt-1" style="display: block"><b>Salário:</b> R$ {{ usuario.salario_time|intcomma}}</span>
-                <span class="pt-1" style="display: block"><b>Saldo:</b> R$ {{ usuario.saldo_time|intcomma}}</span>
+      <!-- Left side columns -->
+      <div class="col-lg-8">
+        <div class="row">
+          <!-- Revenue Card -->
+          <div class="col-xxl-6 col-md-12">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  Orçamento <span>| Temporada Atual</span>
+                </h5>
+                {% for usuario in orcamento %}
+                <div class="d-flex align-items-center">
+                  <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                    <i class="bi bi-currency-dollar"></i>
+                  </div>
+                  <div class="ps-3">
+                    <h6>R$ {{ usuario.dinheiro_time|intcomma }}</h6>
+                    <span class="pt-1" style="display: block"><b>Salário:</b> R$
+                      {{ usuario.salario_time|intcomma}}</span>
+                    <span class="pt-1" style="display: block"><b>Saldo:</b> R$ {{ usuario.saldo_time|intcomma}}</span>
+                  </div>
+                </div>
+                {% endfor %}
               </div>
             </div>
-            {% endfor %}
+          </div>
+          <!-- End Revenue Card -->
+
+
+          <div class="col-xxl-6 col-md-12">
+            <div class="card info-card revenue-card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  Últimas Notícias:</span>
+                </h5>
+                <ul class="list-group">
+                  {% for item in comentarios %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>Resultado: </strong>{{ item.resultado }} - {{ item.data|date:"d M Y H:i" }}
+                      <p><b><i>Comentário: </i></b> "{{ item.comentario }}" - {{ request.user }}</p>
+                    </div>
+
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- End Revenue Card -->
 
-      <div class="col-xxl-6 col-md-12">
-        <div class="card info-card revenue-card">
-          <div class="card-body">
-            <h5 class="card-title">
-              Últimas Notícias:</span>
-            </h5>
-            <ul class="list-group">
-              {% for item in comentarios %}
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>Resultado: </strong>{{ item.resultado }} - {{ item.data|date:"d M Y H:i" }}
-                  <p><b><i>Comentário: </i></b> "{{ item.comentario }}" - {{ request.user }}</p>
-                </div>
-
-              </li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </div>
-      </div>
-      </div>
-
-
-
-     <div class="col-lg-4">
+      <div class="col-lg-4">
         <div class="card d-flex align-items-center ">
           <div class="card-body pb-2 justify-content-center">
             <h5 class="card-title">Elenco</h5>
             {% for jogador in jogadores %}
             <div class="">
               <div class="d-flex align-items-center">
-                <img src="{{ jogador.avatar }}" alt="" width="40" height="40">
+                <img src="{{ jogador.avatar }}" alt="" width="40" height="40" draggable="true">
                 <span>{{ jogador.nome }}</span>
                 <span style="margin-left: 10px !important;">({{ jogador.posicao }})</span>
               </div>
               <hr>
               {% endfor %}
 
+            </div>
           </div>
-        </div>
-          <span>Minímo jogadores no elenco: 14</span>
+          <span>Mínimo de jogadores no elenco: 14</span>
 
           {% if quantidade_jogadores %}
-            <p>Jogadores no seu elenco: <b>{{ quantidade_jogadores }}</b></p>
+          <p>Jogadores no seu elenco: <b>{{ quantidade_jogadores }}</b></p>
           {% else %}
-            <p>Jogadores no elenco: <b>0</b></p>
+          <p>Jogadores no elenco: <b>0</b></p>
           {% endif %}
 
+        </div>
       </div>
-    </div>
 
   </section>
-
 </main>
+
 <!-- End #main -->
 {% endblock %}
