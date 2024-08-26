@@ -36,7 +36,7 @@ class OrcamentoTimeAdmin(admin.ModelAdmin):
 class DadosEafcTimeAdmin(admin.ModelAdmin):
     model = DadosEafc
     list_display = ["nome", "overall", "time_usuario", "preco"]
-    search_fields = ["usuario", ]
+    search_fields = ["time_usuario"]
     list_filter = ["nome"]
 
 class TeamAdmin(admin.ModelAdmin):
