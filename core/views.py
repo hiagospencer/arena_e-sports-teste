@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db import transaction
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from datetime import date
+
 import threading
 import pandas as pd
 import locale
@@ -58,7 +60,8 @@ def homepage(request):
 @login_required(login_url="login/")
 def classificacao(request):
     posicao_usuario = Classificacao.objects.all().order_by('-pontos', '-saldo_gols', '-vitoria')
-    return render(request, 'classificacao.html', {'classificacao': posicao_usuario})
+    ano = date.today().year
+    return render(request, 'classificacao.html', {'classificacao': posicao_usuario, "ano":ano})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -104,7 +107,7 @@ def zerar_pontos_classificacao(request):
 @login_required(login_url="login/")
 def salvar_jogos(request):
     formClear = JogoForm()
-
+    usuario = request.user
     if request.method == "POST":
         comentario = request.POST.get('comentario')
         form = JogoForm(request.POST)
@@ -117,7 +120,7 @@ def salvar_jogos(request):
             placar_visitante = getattr(jogo, 'placar_visitante')
 
             mensagem = f'{casa} {placar_casa} x {placar_visitante} {visitante}'
-            NotificacaoJogo.objects.create(resultado=mensagem,comentario=comentario)
+            NotificacaoJogo.objects.create(resultado=mensagem,comentario=f'{usuario}: {comentario}')
 
             messages.success(request, f'Jogo salvado com sucesso!')
             context = {'form': formClear,}
