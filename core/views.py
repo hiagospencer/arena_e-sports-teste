@@ -119,6 +119,7 @@ def salvar_jogos(request):
             mensagem = f'{casa} {placar_casa} x {placar_visitante} {visitante}'
             NotificacaoJogo.objects.create(resultado=mensagem,comentario=comentario)
 
+            messages.success(request, f'Jogo salvado com sucesso!')
             context = {'form': formClear,}
             return render(request, 'salvar_jogos.html', context)
 

@@ -8,6 +8,15 @@ eSports | Salvar Jogos {% endblock%} {% block body %} {% load crispy_forms_tags 
           Salvar Jogos:
         </h3>
         <h2 class="my-4">Inserir Resultado do Jogo</h2>
+        {% if messages %}
+
+        {% for message in messages %}
+        <div class="alert alert-info mt-2" role="alert">
+          <span{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</span>
+        </div>
+        {% endfor %}
+
+        {% endif %}
         <form method="POST" class="mb-4" action="{% url 'salvar_jogos' %}">
           {% csrf_token %}
           <div class="form-row">
