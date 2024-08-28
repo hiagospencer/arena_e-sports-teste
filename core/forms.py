@@ -27,9 +27,7 @@ class JogoForm(forms.ModelForm):
                 Submit('submit', 'Salvar', css_class='btn btn-primary')
             )
         )
-        times_ativo = Usuario.objects.filter(pagamento=True)
-        self.fields['time_visitante'].queryset = times_ativo
-        self.fields['time_casa'].queryset = times_ativo
+        self.fields['time_visitante'].queryset = self.fields['time_casa'].queryset
 
     def clean(self):
         cleaned_data = super().clean()
