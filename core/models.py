@@ -15,7 +15,7 @@ class Usuario(models.Model):
 
 
     def __str__(self):
-        return f"Nome: {self.usuario}"
+        return f"{self.usuario}"
 
 class Rodada(models.Model):
     numero = models.IntegerField()
@@ -58,6 +58,7 @@ class Classificacao(models.Model):
     gols_pro = models.IntegerField(default=0)
     gols_contra = models.IntegerField(default=0)
     saldo_gols = models.IntegerField(default=0)
+    pagamento = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.usuario} - {self.pontos}"

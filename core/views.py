@@ -59,7 +59,7 @@ def homepage(request):
 
 @login_required(login_url="login/")
 def classificacao(request):
-    posicao_usuario = Classificacao.objects.all().order_by('-pontos', '-saldo_gols', '-vitoria')
+    posicao_usuario = Classificacao.objects.filter(pagamento=True).order_by('-pontos', '-saldo_gols', '-vitoria')
     ano = date.today().year
     return render(request, 'classificacao.html', {'classificacao': posicao_usuario, "ano":ano})
 
