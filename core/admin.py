@@ -23,7 +23,7 @@ class PartidaAdmin(admin.ModelAdmin):
 
 class ClassificacaoAdmin(admin.ModelAdmin):
     model = Classificacao
-    list_display = ["usuario", "pontos", ]
+    list_display = ["usuario", "pontos", "jogos", "pagamento"]
     search_fields = ["usuario"]
     list_filter = ["usuario"]
 
