@@ -1,0 +1,74 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Salvar Jogos {% endblock%} {% block body %} {% load crispy_forms_tags %}
+<main id="main" class="main">
+    <section class="section col-xxl-4 col-xl-12">
+        <div class="card col-xxl-12">
+            <div class="card-body">
+                <h3 class="title p-3" id="rodada">
+                    Salvar Gols:
+                </h3>
+                <h2 class="my-4">Inserir gols do jogo: {{mensagem_resultado}}</h2>
+                <form method="POST" class="mb-4" action="{% url 'salvar_gols' %}">
+                    {% csrf_token %}
+                    <h4>Time Casa:</h4>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                           {% for i in placar_casa%}
+                                <select name="gols_casa_{{i}}" id="gols_casa_{{i}}" class="form-select form-select-sm mb-md-2 " aria-label=".form-select-sm example">
+                                    <option value="" class="w-50" >{{ forloop.counter }}º Gol</option>
+                                    {% for jogador in jogadores_casa %}
+                                        <option class="w-50"  value="{{ jogador.nome }}">{{ jogador.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            {% for i in placar_casa%}
+                            <select name="assistencia_casa_{{i}}" id="assistencia_casa_{{i}}" class="form-select form-select-sm mb-2 w-100" aria-label=".form-select-sm example">
+                                <option value="" class="w-50" >{{ forloop.counter }}ª Assistência</option>
+                                {% for jogador in jogadores_casa %}
+                                    <option value="{{ jogador.nome }}" class="w-100">{{ jogador.nome }}</option>
+                                {% endfor %}
+                            </select>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div style="border-bottom: 1px solid rgb(219, 217, 217);" class="mb-4"></div>
+
+
+                    <h4>Time Visitante:</h4>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            {% for i in placar_visitante %}
+                            <select name="gols_visitante_{{i}}" id="gols_visitante_{{i}}" class="form-select form-select-sm mb-md-2 " aria-label=".form-select-sm example">
+                                <option value="" class="w-50">{{ forloop.counter }}º Gol</option>
+                                {% for jogador in jogadores_visitante %}
+                                <option class="w-50" value="{{ jogador.nome }}">{{ jogador.nome }}</option>
+                                {% endfor %}
+                            </select>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group col-md-6">
+
+                            {% for i in placar_visitante %}
+                            <select name="assistencia_visitante_{{i}}" id="assistencia_visitante_{{i}}" class="form-select form-select-sm mb-2 w-100" aria-label=".form-select-sm example">
+                                <option value="" class="w-50">{{ forloop.counter }}ª Assistência</option>
+                                {% for jogador in jogadores_visitante %}
+                                <option value="{{ jogador.nome }}" class="w-100">{{ jogador.nome }}</option>
+                                {% endfor %}
+                            </select>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+
+                <!-- === Fim da sessão de apostas ==== -->
+            </div>
+        </div>
+    </section>
+</main>
+<!-- End #main -->
+{% endblock %}

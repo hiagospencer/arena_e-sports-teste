@@ -1,0 +1,63 @@
+{% extends 'auxiliar/base.html'%} {% load static %} {% block title %} Arena
+eSports | Salvar Jogos {% endblock%} {% block body %} {% load crispy_forms_tags %}
+<main id="main" class="main">
+    <section class="section col-xxl-4 col-xl-12">
+        <div class="card col-xxl-12">
+            <div class="card-body">
+                <h2 class="my-4 d-flex justify-content-center">Artilharia & Assistência </h2>
+                <div class="container">  
+                    <div class="row ">
+                        <div class="col-md-6 d-flex">  
+                            <table class="table table-dark table-striped mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>Posição</th>
+                                        <th></th>
+                                        <th>Gols</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for jogador in artilheiros %}
+                                    <tr>
+                                        <td style="text-align: center;">{{ forloop.counter }}</td>
+                                        <td>
+                                            <img src="{{ jogador.avatar }}" alt="" width="35"
+                                                height="35" />{{jogador.nome}}
+                                        </td>
+                                        <td style="text-align: center;">{{ jogador.gols }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6 d-flex">
+                            <table class="table table-dark table-striped justify-content-center mt-2">
+                                <thead>
+                                    <tr>
+                                        <th>Posição</th>
+                                        <th></th>
+                                        <th>Assistência</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for jogador in assistencias %}
+                                    <tr>
+                                        <td style="text-align: center;">{{ forloop.counter }}</td>
+                                        <td>
+                                            <img src="{{ jogador.avatar }}" alt="" width="35" height="35" />{{jogador.nome}}
+                                        </td>
+                                        <td style="text-align: center;">{{ jogador.assistencias }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<!-- End #main -->
+{% endblock %}

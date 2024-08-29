@@ -1,15 +1,16 @@
+from pathlib import Path
 from django.contrib.auth.models import User
 from .models import Rodada, Partida, Classificacao, OrcamentoTime, DadosEafc
 from django.db.models import Q
+from django.db import IntegrityError
+from .api_times import get_api_eafc
+from collections import defaultdict
+
 import datetime
 import notifypy
 import pandas as pd
-from .api_times import get_api_eafc
 import os
-from pathlib import Path
-from django.db import IntegrityError
 import locale
-
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -174,3 +175,11 @@ def moeda(dinheiro):
     locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
     valor = locale.currency(valor, grouping=True, symbol=None)
     return valor
+
+def contagens_gols_assistencia(dados):
+    contagens = defaultdict(int)
+
+    for jogador in dados:
+        contagens[jogador] += 1
+
+    return contagens

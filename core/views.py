@@ -63,6 +63,10 @@ def classificacao(request):
     ano = date.today().year
     return render(request, 'classificacao.html', {'classificacao': posicao_usuario, "ano":ano})
 
+def gols_assistencia(request):
+    artilheiros = DadosEafc.objects.filter(gols__gte=1).order_by('-gols')
+    assistencias = DadosEafc.objects.filter(assistencias__gte=1).order_by('-assistencias')
+    return render(request,'gols_assistencia.html',{"artilheiros":artilheiros, "assistencias":assistencias})
 
 @user_passes_test(lambda u: u.is_superuser)
 def gerar_jogos(request):
@@ -119,6 +123,15 @@ def salvar_jogos(request):
             placar_casa = getattr(jogo, 'placar_casa')
             placar_visitante = getattr(jogo, 'placar_visitante')
 
+
+            casa_str = str(casa)
+            visitante_str = str(visitante)
+            request.session['casa'] = casa_str
+            request.session['visitante'] = visitante_str
+            request.session['placar_casa'] = placar_casa
+            request.session['placar_visitante'] = placar_visitante
+
+
             mensagem = f'{casa} {placar_casa} x {placar_visitante} {visitante}'
             NotificacaoJogo.objects.create(resultado=mensagem,comentario=f'{usuario}: {comentario}')
 
@@ -135,7 +148,74 @@ def salvar_jogos(request):
     context = {'form': form,}
     return render(request, 'salvar_jogos.html', context)
 
+def salvar_gols_assistencias(request):
+    casa = request.session.get('casa')
+    visitante = request.session.get('visitante')
+    placar_casa = request.session.get('placar_casa')
+    placar_visitante = request.session.get('placar_visitante')
+    usuario_casa = User.objects.get(username=casa)
+    usuario_visitante = User.objects.get(username=visitante)
+    jogadores_casa = DadosEafc.objects.filter(time_usuario__usuario=usuario_casa)
+    jogadores_visitante = DadosEafc.objects.filter(time_usuario__usuario=usuario_visitante)
+    mensagem_resultado = f"{casa} {placar_casa} x {placar_visitante} {visitante}"
 
+    if request.method == "POST":
+        jogadores_gols_casa = []
+        jogadores_assistencia_casa = []
+        jogadores_gols_visitante = []
+        jogadores_assistencia_visitante = []
+        for i in range(placar_casa):
+            jogador_gols_casa = request.POST.get(f"gols_casa_{i}")
+            jogador_assistencia_casa = request.POST.get(f"assistencia_casa_{i}")
+            jogador_gols_visitante = request.POST.get(f"gols_visitante_{i}")
+            jogador_assistencia_visitante = request.POST.get(f"assistencia_visitante_{i}")
+
+            jogadores_gols_casa.append(jogador_gols_casa)
+            jogadores_assistencia_casa.append(jogador_assistencia_casa)
+            jogadores_gols_visitante.append(jogador_gols_visitante)
+            jogadores_assistencia_visitante.append(jogador_assistencia_visitante)
+
+
+        contagens_gols_casa = contagens_gols_assistencia(jogadores_gols_casa)
+        contagens_assistencia_casa = contagens_gols_assistencia(jogadores_assistencia_casa)
+        contagens_gols_visitante = contagens_gols_assistencia(jogadores_gols_visitante)
+        contagens_assistencia_visitante = contagens_gols_assistencia(jogadores_assistencia_visitante)
+
+        for nomes in contagens_gols_casa.keys():
+            if nomes:
+                jogador_casa = DadosEafc.objects.get(nome=nomes)
+                jogador_casa.gols += contagens_gols_casa[nomes]
+                jogador_casa.save()
+            else:
+                print(f"Error: {nomes}")
+
+        for nomes in contagens_assistencia_casa.keys():
+            if nomes:
+                jogador_casa = DadosEafc.objects.get(nome=nomes)
+                jogador_casa.assistencias += contagens_assistencia_casa[nomes]
+                jogador_casa.save()
+            else:
+                print(f"Error: {nomes}")
+
+        for nomes in contagens_gols_visitante.keys():
+            if nomes:
+                jogador_visitante = DadosEafc.objects.get(nome=nomes)
+                jogador_visitante.gols += contagens_gols_visitante[nomes]
+                jogador_visitante.save()
+            else:
+                print(f"Error: {nomes}")
+
+        for nomes in contagens_assistencia_visitante.keys():
+            if nomes:
+                jogador_visitante = DadosEafc.objects.get(nome=nomes)
+                jogador_visitante.assistencias += contagens_assistencia_visitante[nomes]
+                jogador_visitante.save()
+            else:
+                print(f"Error: {nomes}")
+
+
+    context = {'jogadores_casa':jogadores_casa,'jogadores_visitante':jogadores_visitante, 'placar_casa':range(placar_casa),'placar_visitante':range(placar_visitante), 'mensagem_resultado':mensagem_resultado}
+    return render(request, 'salvar_gols.html', context)
 
 @login_required(login_url="login/")
 def leiloes(request):
@@ -144,7 +224,6 @@ def leiloes(request):
     news = News.objects.all().order_by('-date')[:10]
     posicao_selecionada = request.GET.get('posicao')
     nome_pesquisa = request.GET.get('pesquisar')
-    print(posicao_selecionada)
     if nome_pesquisa:
         jogadores = DadosEafc.objects.filter(nome__icontains=nome_pesquisa)
         leilao,criado = LeilaoAtivo.objects.get_or_create()
@@ -171,7 +250,7 @@ def leiloes(request):
         nome_jogador = request.session.get('nome_jogador')
         jogadores = DadosEafc.objects.all().order_by('-preco', '-overall')
         leilao,criado = LeilaoAtivo.objects.get_or_create()
-        team = Team.objects.get(usuario=request.user)
+        posicao_selecionada = ""
         #paginator
         paginator = Paginator(jogadores, 20)
         page_obj = request.GET.get('page')

@@ -78,7 +78,9 @@ class DadosEafc(models.Model):
     preco = models.DecimalField(default=2000, max_digits=100, decimal_places=2)
     salario = models.DecimalField(default=200, max_digits=100, decimal_places=2)
     time_usuario = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True, related_name='jogador')
-    comprado = models.BooleanField(default=False)
+    gols = models.IntegerField(default=0)
+    assistencias = models.IntegerField(default=0)
+    qtd_melhor_campo = models.IntegerField(default=0)
 
 
 class News(models.Model):
