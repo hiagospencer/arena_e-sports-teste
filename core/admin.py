@@ -37,7 +37,7 @@ class DadosEafcTimeAdmin(admin.ModelAdmin):
     model = DadosEafc
     list_display = ["nome", "overall", "time_usuario", "preco"]
     search_fields = ["time_usuario"]
-    list_filter = ["nome"]
+    list_filter = ["time_usuario"]
 
 class TeamAdmin(admin.ModelAdmin):
     model = Team
