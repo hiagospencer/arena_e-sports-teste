@@ -5,8 +5,9 @@ from .htmx_views import *
 urlpatterns = [
     path('', homepage, name='homepage'),
     path('classificacao', classificacao, name='classificacao'),
-    path('artilharia', gols_assistencia, name='gols_assistencia'),
     path('salvar-jogos', salvar_jogos, name='salvar_jogos'),
+    path('artilharia', gols_assistencia, name='gols_assistencia'),
+    path('salvar-gols', salvar_gols_assistencias, name='salvar_gols'),
     path('meu-time/', meu_time, name='meu_time'),
 
     path('leiloes/', leiloes, name='leiloes'),

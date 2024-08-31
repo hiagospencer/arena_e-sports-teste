@@ -137,7 +137,7 @@ def salvar_jogos(request):
 
             messages.success(request, f'Jogo salvado com sucesso!')
             context = {'form': formClear,}
-            return render(request, 'salvar_jogos.html', context)
+            return redirect("salvar_gols")
 
     else:
         form = JogoForm()
