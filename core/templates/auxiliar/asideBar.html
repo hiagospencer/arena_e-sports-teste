@@ -1,19 +1,31 @@
 <aside id="sidebar" class="sidebar">
   <ul class="sidebar-nav" id="sidebar-nav">
+    {% if request.resolver_match.url_name in "/homepage" %}
     <li class="nav-item">
-      <a class="nav-link " href="{% url 'homepage'%}">
+      <a class="nav-link" href="{% url 'homepage'%}">
         <i class="bi bi-grid"></i>
         <span>Início</span>
       </a>
     </li><!-- End Dashboard Nav -->
-
+    {% else %}
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-journal-text"></i><span>Liga</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed" href="{% url 'homepage'%}">
+        <i class="bi bi-grid"></i>
+        <span>Início</span>
       </a>
-      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+    </li><!-- End Dashboard Nav -->
+    {% endif %}
+
+
+    {% if request.resolver_match.url_name in "/classificacao_liga" or request.resolver_match.url_name in
+    "gols_assistencia" %}
+    <li class="nav-item">
+      <a class="nav-link" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-graph-up-arrow"></i></i><span>Liga</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="{% url 'classificacao'%}">
+          <a href="{% url 'classificacao_liga'%}">
             <i class="bi bi-circle"></i><span>Classificação</span>
           </a>
         </li>
@@ -24,9 +36,31 @@
         </li>
       </ul>
     </li><!-- End Forms Nav -->
-
+    {% else %}
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-graph-up-arrow"></i></i><span>Liga</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'classificacao_liga'%}">
+            <i class="bi bi-circle"></i><span>Classificação</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'gols_assistencia'%}">
+            <i class="bi bi-circle"></i><span>Artilharia/Assistência</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Forms Nav -->
+    {% endif %}
+
+
+
+    {% if request.resolver_match.url_name in "salvar_jogos" %}
+    <li class="nav-item">
+      <a class="nav-link " data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-layout-text-window-reverse"></i><span>Jogos</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -41,6 +75,7 @@
             <i class="bi bi-circle"></i><span>Gerar jogos</span>
           </a>
         </li>
+
         <li>
           <a href="{% url 'criar_jogadores'%}">
             <i class="bi bi-circle"></i><span>Criar jogadores</span>
@@ -59,10 +94,135 @@
         {% endif %}
       </ul>
     </li><!-- End Tables Nav -->
-
+    {% else %}
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-menu-button-wide"></i><span>Negociações</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-layout-text-window-reverse"></i><span>Jogos</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="{% url 'salvar_jogos'%}">
+            <i class="bi bi-circle"></i><span>Salvar jogo</span>
+          </a>
+        </li>
+        {% if user.is_superuser %}
+        <li>
+          <a href="{% url 'gerar_jogos'%}">
+            <i class="bi bi-circle"></i><span>Gerar jogos</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="{% url 'criar_jogadores'%}">
+            <i class="bi bi-circle"></i><span>Criar jogadores</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'criar_emblemas_times'%}">
+            <i class="bi bi-circle"></i><span>Criar os emblemas</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'zerar_pontos_classificacao'%}">
+            <i class="bi bi-circle"></i><span>Resetar Classificação</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </li><!-- End Tables Nav -->
+    {% endif %}
+
+
+    {% if request.resolver_match.url_name in "classificacao_grupo" or request.resolver_match.url_name in
+    "salvar_jogo_grupos" or request.resolver_match.url_name in "mata_mata" or request.resolver_match.url_name in
+    "salvar_jogo_mata_mata"%}
+    <li class="nav-item">
+      <a class="nav-link" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-trophy"></i><span>Copa</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        {% if user.is_superuser %}
+        <li>
+          <a href="{% url 'iniciar_torneio'%}">
+            <i class="bi bi-circle"></i><span>Iniciar Torneio</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'criar_fases_eliminatorias'%}">
+            <i class="bi bi-circle"></i><span>Criar Fases Eliminatórias</span>
+          </a>
+        </li>
+        {% endif %}
+        <li>
+          <a href="{% url 'classificacao_grupo'%}">
+            <i class="bi bi-circle"></i><span>Grupos</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'salvar_jogo_grupos'%}">
+            <i class="bi bi-circle"></i><span>Salvar Jogos Grupos</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'mata_mata'%}">
+            <i class="bi bi-circle"></i><span>Mata-Mata</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'salvar_jogo_mata_mata'%}">
+            <i class="bi bi-circle"></i><span>Salvar jogo Mata-Mata</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Icons Nav  -->
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-trophy"></i><span>Copa</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        {% if user.is_superuser %}
+        <li>
+          <a href="{% url 'iniciar_torneio'%}">
+            <i class="bi bi-circle"></i><span>Iniciar Torneio</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'criar_fases_eliminatorias'%}">
+            <i class="bi bi-circle"></i><span>Criar Fases Eliminatórias</span>
+          </a>
+        </li>
+        {% endif %}
+        <li>
+          <a href="{% url 'classificacao_grupo'%}">
+            <i class="bi bi-circle"></i><span>Grupos</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'salvar_jogo_grupos'%}">
+            <i class="bi bi-circle"></i><span>Salvar Jogos Grupos</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'mata_mata'%}">
+            <i class="bi bi-circle"></i><span>Mata-Mata</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'salvar_jogo_mata_mata'%}">
+            <i class="bi bi-circle"></i><span>Salvar jogo Mata-Mata</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Icons Nav  -->
+    {% endif %}
+
+
+    {% if request.resolver_match.url_name in "leiloes" or request.resolver_match.url_name in "contratar_jogador" or
+    request.resolver_match.url_name in "trade_list" or request.resolver_match.url_name in "meu_time" %}
+    <li class="nav-item">
+      <a class="nav-link" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bank"></i><span>Negociações</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
@@ -88,13 +248,53 @@
       </ul>
     </li><!-- End Forms Nav -->
 
+    {% else %}
+    <li class="nav-item"></li>
+    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+      <i class="bi bi-bank"></i><span>Negociações</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+      <li>
+        <a href="{% url 'leiloes'%}">
+          <i class="bi bi-circle"></i><span>Leilões</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'contratar_jogador'%}">
+          <i class="bi bi-circle"></i><span>Contratar Jogador</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'trade_list'%}">
+          <i class="bi bi-circle"></i><span>Lista de transferência</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'meu_time'%}">
+          <i class="bi bi-circle"></i><span>Meu Time</span>
+        </a>
+      </li>
+    </ul>
+    </li><!-- End Forms Nav -->
+    {% endif %}
 
+
+    {% if request.resolver_match.url_name in "perfil" %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'perfil'%}">
+        <i class="bi bi-person"></i>
+        <span>Perfil</span>
+      </a>
+    </li><!-- End Profile Page Nav -->
+    {% else %}
     <li class="nav-item">
       <a class="nav-link collapsed" href="{% url 'perfil'%}">
         <i class="bi bi-person"></i>
         <span>Perfil</span>
       </a>
     </li><!-- End Profile Page Nav -->
+    {% endif %}
+
 
     {% if user.is_authenticated %}
     <li class="nav-item">
