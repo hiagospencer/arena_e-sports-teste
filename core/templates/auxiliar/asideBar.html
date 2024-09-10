@@ -17,8 +17,7 @@
     {% endif %}
 
 
-    {% if request.resolver_match.url_name in "/classificacao_liga" or request.resolver_match.url_name in
-    "gols_assistencia" %}
+    {% if request.resolver_match.url_name in "/classificacao_liga" or request.resolver_match.url_name in "gols_assistencia" %}
     <li class="nav-item">
       <a class="nav-link" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-graph-up-arrow"></i></i><span>Liga</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -133,93 +132,8 @@
     {% endif %}
 
 
-    {% if request.resolver_match.url_name in "classificacao_grupo" or request.resolver_match.url_name in
-    "salvar_jogo_grupos" or request.resolver_match.url_name in "mata_mata" or request.resolver_match.url_name in
-    "salvar_jogo_mata_mata"%}
-    <li class="nav-item">
-      <a class="nav-link" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-trophy"></i><span>Copa</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        {% if user.is_superuser %}
-        <li>
-          <a href="{% url 'iniciar_torneio'%}">
-            <i class="bi bi-circle"></i><span>Iniciar Torneio</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'criar_fases_eliminatorias'%}">
-            <i class="bi bi-circle"></i><span>Criar Fases Eliminatórias</span>
-          </a>
-        </li>
-        {% endif %}
-        <li>
-          <a href="{% url 'classificacao_grupo'%}">
-            <i class="bi bi-circle"></i><span>Grupos</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'salvar_jogo_grupos'%}">
-            <i class="bi bi-circle"></i><span>Salvar Jogos Grupos</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'mata_mata'%}">
-            <i class="bi bi-circle"></i><span>Mata-Mata</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'salvar_jogo_mata_mata'%}">
-            <i class="bi bi-circle"></i><span>Salvar jogo Mata-Mata</span>
-          </a>
-        </li>
-      </ul>
-    </li><!-- End Icons Nav  -->
-    {% else %}
-    <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-trophy"></i><span>Copa</span><i class="bi bi-chevron-down ms-auto"></i>
-      </a>
-      <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-        {% if user.is_superuser %}
-        <li>
-          <a href="{% url 'iniciar_torneio'%}">
-            <i class="bi bi-circle"></i><span>Iniciar Torneio</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'criar_fases_eliminatorias'%}">
-            <i class="bi bi-circle"></i><span>Criar Fases Eliminatórias</span>
-          </a>
-        </li>
-        {% endif %}
-        <li>
-          <a href="{% url 'classificacao_grupo'%}">
-            <i class="bi bi-circle"></i><span>Grupos</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'salvar_jogo_grupos'%}">
-            <i class="bi bi-circle"></i><span>Salvar Jogos Grupos</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'mata_mata'%}">
-            <i class="bi bi-circle"></i><span>Mata-Mata</span>
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'salvar_jogo_mata_mata'%}">
-            <i class="bi bi-circle"></i><span>Salvar jogo Mata-Mata</span>
-          </a>
-        </li>
-      </ul>
-    </li><!-- End Icons Nav  -->
-    {% endif %}
 
-
-    {% if request.resolver_match.url_name in "leiloes" or request.resolver_match.url_name in "contratar_jogador" or
-    request.resolver_match.url_name in "trade_list" or request.resolver_match.url_name in "meu_time" %}
+    {% if request.resolver_match.url_name in "leiloes" or request.resolver_match.url_name in "contratar_jogador" or request.resolver_match.url_name in "trade_list" or request.resolver_match.url_name in "meu_time" %}
     <li class="nav-item">
       <a class="nav-link" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-bank"></i><span>Negociações</span><i class="bi bi-chevron-down ms-auto"></i>
