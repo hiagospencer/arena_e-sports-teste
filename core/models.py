@@ -91,7 +91,7 @@ class News(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return f"Notícia: {self.player.name} foi transferido de {self.seller.username} para {self.buyer.username}"
+        return f"Notícia: {self.player.nome} foi transferido de {self.seller.username} para {self.buyer.username}"
 
 class NotificacaoJogo(models.Model):
     resultado = models.CharField(max_length=200, null=True, blank=True)
