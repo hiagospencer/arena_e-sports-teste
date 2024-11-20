@@ -85,12 +85,9 @@ WSGI_APPLICATION = 'arenaEsports.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'arena_esports',
-        'USER': 'admin',
-        'PASSWORD': 'avjkbqG9kQp2lD4tnTT3RMOCWii0K9BL',
-        'HOST': 'dpg-cqtqh75ds78s73dmml70-a.oregon-postgres.render.com',
-    },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 
@@ -142,18 +139,17 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
-MEDIA_URL = "imagens/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CSRF_TRUSTED_ORIGINS = ['https://0447-177-137-18-246.ngrok-free.app/']
+CSRF_TRUSTED_ORIGINS = ['https://847a-177-137-18-170.ngrok-free.app/']
 
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = True

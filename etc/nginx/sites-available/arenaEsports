@@ -1,0 +1,16 @@
+server {
+    listen 80;
+
+    server_name localhost;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /arenaEsports;
+    }
+
+    # Caminho para servir arquivos media
+    location /media/ {
+        alias arenaEsports/media/;
+        autoindex on;
+    }
+}

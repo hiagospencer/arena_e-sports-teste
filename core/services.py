@@ -143,7 +143,7 @@ def dados_fifa():
     overall = []
     posicoes = []
     imagens = []
-    dataFrame = pd.read_excel(os.path.join(BASE_DIR, 'arquivos/jogadores_novos.xlsx'))
+    dataFrame = pd.read_excel(os.path.join(BASE_DIR, 'arquivos/jogadores_eafc25.xlsx'))
     # print(dataFrame)
     for index, row in dataFrame.iterrows():
 
@@ -162,6 +162,7 @@ def resetar_campeonato():
     for usuario in usuarios:
         usuario.pontos = 0
         usuario.vitoria = 0
+        usuario.jogos = 0
         usuario.empate = 0
         usuario.derrota = 0
         usuario.gols_pro = 0

@@ -591,6 +591,7 @@ def meu_time(request):
 
 
 @login_required(login_url="login/")
+@csrf_exempt
 def perfil(request):
     user = request.user
     usuario = Usuario.objects.filter(usuario=user)
@@ -633,7 +634,7 @@ def perfil(request):
     context = {"dados":usuario, "verificado":verificado}
     return render(request, 'perfil.html',context)
 
-
+@csrf_exempt
 def fazer_login(request):
     error = False
     if request.user.is_authenticated:
